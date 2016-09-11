@@ -1,0 +1,30 @@
+{
+  "name": "node-hostels-club-api",
+  "version": "0.0.1",
+  "description": "NodeJS wrapper for hostels club XML API service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sean-madhavan/node-hostels-club-api.git"
+  },
+  "keywords": [
+    "nodejs",
+    "xml",
+    "api",
+    "hostels",
+    "club",
+    "json",
+    "hotel",
+    "reserve",
+    "search"
+  ],
+  "author": "Sean Madhavan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sean-madhavan/node-hostels-club-api/issues"
+  },
+  "homepage": "https://github.com/sean-madhavan/node-hostels-club-api#readme"
+}
