@@ -35,6 +35,9 @@
   },
   "homepage": "https://github.com/sean-madhavan/node-hostels-club-api#readme",
   "dependencies": {
+    "debug": "^2.2.0",
+    "fs": "0.0.1-security",
+    "request": "^2.74.0",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
@@ -55,6 +58,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.1",
     "eslint-plugin-react": "^6.2.0",
     "flow-bin": "^0.32.0",
+    "json-loader": "^0.5.4",
     "webpack": "^1.13.2",
     "yargs": "^5.0.0"
   }

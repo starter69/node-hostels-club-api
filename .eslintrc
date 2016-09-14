@@ -18,6 +18,7 @@
     "max-len": [2, 160, 4],
     "no-duplicate-imports": 0,
     "class-methods-use-this": 0,
+    "arrow-parens": 0,
     "flowtype/require-parameter-type": 1,
     "flowtype/require-return-type": [
       1,

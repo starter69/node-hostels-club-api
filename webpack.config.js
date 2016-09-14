@@ -18,6 +18,7 @@ if (env === 'build') {
 var config = {
   entry: __dirname + '/src/index.js',
   devtool: 'source-map',
+  target: 'node',
   output: {
     path: __dirname + '/dist',
     filename: outputFile,
@@ -34,6 +35,9 @@ var config = {
       test: /(\.jsx|\.js)$/,
       loader: 'eslint-loader',
       exclude: /(node_modules|bower_components)/
+    }, {
+      test: /\.json$/,
+      loader: 'json-loader'
     }]
   },
   resolve: {
