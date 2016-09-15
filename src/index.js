@@ -126,9 +126,6 @@ export default class HostelsAPI {
         const resParser = new HotelDescriptiveInfoResponseParser();
         return resParser.parseXML(responseXML);
       })
-      .then((result: Object) => {
-        logger(result);
-      })
       .catch((err: ErrorObjectType) => {
         logger(err);
       });

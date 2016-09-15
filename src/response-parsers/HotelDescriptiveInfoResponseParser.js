@@ -21,7 +21,7 @@ export default class HotelDescriptiveInfoResponseParser extends ResponseParser {
           throw errors;
         }
 
-        return result.OTA_HotelDescriptiveInfoRS;
+        return this._prettifyJSON(result.OTA_HotelDescriptiveInfoRS.HotelDescriptiveContents)[0].HotelDescriptiveContent[0];
       });
   }
 }

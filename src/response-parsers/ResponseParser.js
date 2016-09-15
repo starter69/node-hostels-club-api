@@ -74,4 +74,47 @@ export default class ResponseParser {
     }
     return false;
   }
+
+  /**
+   * recursively prettifies the json result from xml parser (manages attributes and text nodes)
+   * @param {any
+   * @returns {any}
+   */
+  _prettifyJSON(data: any): any {
+    // if it is array, it doesn't have keys. instead it has children
+    if (data instanceof Array) {
+      return data.map((item: any): any => {
+        const prettifiedItem = this._prettifyJSON(item);
+
+        // if (typeof prettifiedItem === 'object' && !(prettifiedItem instanceof Array)) {
+        //   const keys = Object.keys(prettifiedItem);
+        //   if (keys.length === 1) {
+        //     return prettifiedItem[keys[0]];
+        //   }
+        // }
+        return prettifiedItem;
+      });
+    }
+
+    if (typeof data === 'string') {
+      return data;
+    }
+
+    const {
+      $,
+      ...otherChildNodes
+    } = data;
+
+    const otherKeys: Array<string> = Object.keys(otherChildNodes);
+    const result = {
+      ...$
+    };
+
+    for (let i: number = 0; i < otherKeys.length; i += 1) {
+      const key: string = otherKeys[i] === '_' ? 'value' : otherKeys[i];
+      result[key] = this._prettifyJSON(otherChildNodes[otherKeys[i]]);
+    }
+
+    return result;
+  }
 }
