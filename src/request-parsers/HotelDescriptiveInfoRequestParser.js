@@ -1,14 +1,14 @@
 // @flow
 import xml2js from 'xml2js';
-import BaseRequest from './BaseRequest';
+import RequestParser from './RequestParser';
 
-import type { BaseRequestConfigType } from './BaseRequest';
+import type { RequestParserConfigType } from './RequestParser';
 
 export type HotelDescriptiveInfoType = {
   HotelCode: string
 };
 
-export type HotelDescriptiveInfoRequestConfigType = BaseRequestConfigType & {
+export type HotelDescriptiveInfoRequestParserConfigType = RequestParserConfigType & {
   containHotelInfo: bool,
   containFacilityInfo: bool,
   containPolicies: bool,
@@ -28,8 +28,8 @@ const initialConfig = {
   containCustomerReviews: true
 };
 
-export default class HotelDescriptiveInfoRequest extends BaseRequest {
-  _config: HotelDescriptiveInfoRequestConfigType;
+export default class HotelDescriptiveInfoRequestParser extends RequestParser {
+  _config: HotelDescriptiveInfoRequestParserConfigType;
   _data: Array<HotelDescriptiveInfoType>;
 
   /**
@@ -42,7 +42,7 @@ export default class HotelDescriptiveInfoRequest extends BaseRequest {
   /**
    * Returns XMLBuilder compatible object from request data
    * @private
-   * @param {HotelDescriptiveInfoRequestType} req
+   * @param {HotelDescriptiveInfoRequestParserType} req
    * @returns {Object}
    */
   _makeHotelInfo(req: HotelDescriptiveInfoType): Object {
@@ -88,7 +88,7 @@ export default class HotelDescriptiveInfoRequest extends BaseRequest {
    * @returns {string}
    */
   getRequestBody(data: Array<HotelDescriptiveInfoType>): string {
-    const builder = new xml2js.Builder({ headless: true });
+    const builder = new xml2js.Builder({ headless: true, renderOpts: { pretty: false } });
     return builder.buildObject({
       HotelDescriptiveInfos: {
         HotelDescriptiveInfo: data.map(this._makeHotelInfo.bind(this))

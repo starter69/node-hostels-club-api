@@ -1,7 +1,7 @@
 // @flow
 import xml2js from 'xml2js';
 
-export type BaseRequestConfigType = {
+export type RequestParserConfigType = {
   siteID: string,
   password: string,
   language: string,
@@ -18,11 +18,11 @@ const initialConfig = {
 /**
  * This is base class for all requests.
  * It will provide basic structure for returning Hostels XML Request based on JSON data
- * @class BaseRequest
+ * @class RequestParser
  */
-export default class BaseRequest {
+export default class RequestParser {
 
-  _config: BaseRequestConfigType;
+  _config: RequestParserConfigType;
   _data: any;
 
   /**
@@ -48,11 +48,14 @@ export default class BaseRequest {
   getPOS(): string {
     const builder = new xml2js.Builder({
       rootName: 'POS',
-      headless: true
+      headless: true,
+      renderOpts: {
+        pretty: false
+      }
     });
     return builder.buildObject({
       Source: {
-        RequestID: {
+        RequestorID: {
           $: {
             ID: this._config.siteID,
             MessagePassword: this._config.password

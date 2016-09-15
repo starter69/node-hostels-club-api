@@ -1,11 +1,11 @@
 // @flow
 import request from 'request';
-import debug from 'debug';
 
-import HotelDescriptiveInfoRequest from './requests/HotelDescriptiveInfoRequest';
-import ResponseParser from './ResponseParser';
+import logger from './logger';
+import HotelDescriptiveInfoRequestParser from './request-parsers/HotelDescriptiveInfoRequestParser';
+import HotelDescriptiveInfoResponseParser from './response-parsers/HotelDescriptiveInfoResponseParser';
 
-import type { HotelDescriptiveInfoType } from './requests/HotelDescriptiveInfoRequest';
+import type { HotelDescriptiveInfoType } from './request-parsers/HotelDescriptiveInfoRequestParser';
 
 type RequestErrorType = {
   code: string
@@ -19,14 +19,24 @@ type APIConfigType = {
   siteID: string,
   password: string,
   language: string,
-  currency: string
+  currency: string,
+  debug: bool
+};
+
+type ErrorObjectType = {
+  ErrorCode: string,
+  TimeStamp: ?string,
+  ErrorMessage: string,
+  Status: ?string,
+  ErrorType: ?string
 };
 
 const initialConfig = {
   siteID: '',
   password: '',
   language: 'en',
-  currency: 'USD'
+  currency: 'USD',
+  debug: true
 };
 
 /**
@@ -40,16 +50,10 @@ export default class HostelsAPI {
   config: APIConfigType;
 
   /**
-   * @property _log
-   */
-  _log: Function;
-
-  /**
    * @method constructor
    * @param { Object } config - initial config
    */
   constructor(config: Object) {
-    this._log = debug('hostels-api');
     this.setConfig(Object.assign({}, initialConfig, config));
   }
 
@@ -69,31 +73,26 @@ export default class HostelsAPI {
    */
   _call(requestXML: string): Promise<any> {
     const uri: string = this._getAPIEndpoint();
-    this._log(`Making request to ${uri}`);
-    // this._log(`${encodeURIComponent(requestXML)}`);
+    logger(`Making request to ${uri}`);
+    // NOTE
+    // encodeURIComponent returns malformed XML error
+    // You should just change ampersands to proper code
+    logger(`${requestXML}`);
+    const requestData = requestXML.replace(/&/g, '%26');
     return new Promise((resolve: Function, reject: Function) => {
       request.post({
         uri,
         form: {
-          OTA_request: encodeURIComponent(requestXML)
+          OTA_request: requestData
         }
       }, (err: ?RequestErrorType, httpResp: RequestHttpResponseType, responseBody: string) => {
+        logger(`Response result ${responseBody}`);
         if (err) {
-          this._log(`Response error code ${err.code}`);
-          this._log(responseBody);
+          logger(`Response error code ${err.code}`);
           reject(responseBody);
         } else {
-          this._log(`Response http status ${httpResp.statusCode}`);
-          this._log(`Response result ${responseBody}`);
-          ResponseParser.parseXML(responseBody)
-          .then((result: Object) => {
-            this._log(result);
-            this._log(JSON.stringify(result));
-            resolve(result);
-          }).catch((error: Object) => {
-            this._log(error);
-            reject(err);
-          });
+          logger(`Response http status ${httpResp.statusCode}`);
+          resolve(responseBody);
         }
       });
     });
@@ -105,7 +104,7 @@ export default class HostelsAPI {
    * @private
    */
   _getAPIEndpoint(): string {
-    return 'http://52.44.44.21:5050/xml/xml.php';
+    return this.config.debug ? 'http://52.44.44.21:5050/xml/xml.php' : 'https://www.hostelspoint.com/xml/xml.php';
   }
 
   /**
@@ -119,9 +118,19 @@ export default class HostelsAPI {
       params.push(...hotelCode);
     }
 
-    const req = new HotelDescriptiveInfoRequest(this.config, params.map(
+    const req = new HotelDescriptiveInfoRequestParser(this.config, params.map(
       (code: string): HotelDescriptiveInfoType => ({ HotelCode: code })
     ));
-    return this._call(req.getRequest());
+    return this._call(req.getRequest())
+      .then((responseXML: string): Promise<any> => {
+        const resParser = new HotelDescriptiveInfoResponseParser();
+        return resParser.parseXML(responseXML);
+      })
+      .then((result: Object) => {
+        logger(result);
+      })
+      .catch((err: ErrorObjectType) => {
+        logger(err);
+      });
   }
 }
