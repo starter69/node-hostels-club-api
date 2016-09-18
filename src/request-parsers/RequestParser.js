@@ -5,16 +5,19 @@ export type RequestParserConfigType = {
   siteID: string,
   password: string,
   language: string,
-  currency: string
+  currency: string,
+  debug: bool
 };
 
 const initialConfig = {
+  debug: true,
   siteID: '',
   password: '',
   language: 'en',
   currency: 'USD'
 };
 
+// @TODO add echo token support
 /**
  * This is base class for all requests.
  * It will provide basic structure for returning Hostels XML Request based on JSON data
@@ -79,5 +82,14 @@ export default class RequestParser {
    */
   getRequest(): string {
     return '';
+  }
+
+  /**
+   * Get environment setting
+   * @returns {string}
+   * @private
+   */
+  _getEnv(): string {
+    return this._config.debug ? 'Test' : 'Production';
   }
 }

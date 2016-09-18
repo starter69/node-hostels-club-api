@@ -105,7 +105,7 @@ export default class HotelDescriptiveInfoRequestParser extends RequestParser {
 
     // NOTE adding attributes to root element is not working at the moment.
     return `<?xml version="1.0" encoding="UTF-8"?>
-      <OTA_HotelDescriptiveInfoRQ EchoToken="1" Target="Production"
+      <OTA_HotelDescriptiveInfoRQ EchoToken="1" Target="${this._getEnv()}"
       Version="1.002"
       xmlns="http://www.opentravel.org/OTA/2003/05"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
