@@ -2,11 +2,28 @@
 import xml2js from 'xml2js';
 import type { ErrorObjectType } from '../index';
 
+export type ResponseParserConfigType = {
+  feature: ?string
+};
+
+const initialConfig = {
+  feature: ''
+};
+
 /**
  * Parses xml response from hostels club API into JSON
  * @class ResponseParser
  */
 export default class ResponseParser {
+  _config: ResponseParserConfigType;
+
+  /**
+   * object constructor
+   */
+  constructor(config: Object) {
+    this._config = Object.assign({}, initialConfig, config);
+  }
+
   /**
    * Parses xml string into promise of JSON
    * @param {string} xmlString
@@ -23,10 +40,28 @@ export default class ResponseParser {
         }
 
         const errorObj: ?ErrorObjectType = this._parseHighLevelErrors(result);
+        const method: string = this.getMethodName();
         if (errorObj) {
           reject(errorObj);
         } else {
-          resolve(result);
+          const prettifiedResult = this._prettifyJSON(result[method]);
+          const errors: ?Array<ErrorObjectType> = this._checkDataErrors(prettifiedResult);
+          if (errors) {
+            reject(errors);
+            return;
+          }
+
+          const warnings: ?Array<ErrorObjectType> = this._checkWarnings(prettifiedResult);
+          if (warnings) {
+            reject(warnings);
+            return;
+          }
+
+          delete prettifiedResult.xmlns;
+          delete prettifiedResult['xmlns:xsi'];
+          delete prettifiedResult['xsi:schemaLocation'];
+
+          resolve(prettifiedResult);
         }
       });
     });
@@ -67,9 +102,25 @@ export default class ResponseParser {
   _checkDataErrors(result: Object): ?ErrorObjectType {
     if (result.Errors) {
       return result.Errors.map((error: Object): ErrorObjectType => ({
-        ErrorCode: error.$.ErrorCode,
-        ErrorType: error.$.ErrorType,
-        ErrorMessage: error._
+        ErrorCode: error.Error.Code,
+        ErrorType: error.Error.Type,
+        ErrorMessage: error.Error.value
+      }));
+    }
+    return false;
+  }
+
+  /**
+   * checks if any warnings received. It will be treated as error as well because it is not processed.
+   * @param {Object} result
+   * @returns {?ErrorObjectType}
+   */
+  _checkWarnings(result: Object): ?ErrorObjectType {
+    if (result.Warnings) {
+      return result.Warnings.map((error: Object): ErrorObjectType => ({
+        ErrorCode: error.Warning.Code,
+        ErrorType: error.Warning.Type,
+        ErrorMessage: error.Warning.value
       }));
     }
     return false;
@@ -83,13 +134,25 @@ export default class ResponseParser {
   _prettifyJSON(data: any): any {
     // if it is array, it doesn't have keys. instead it has children
     if (data instanceof Array) {
+      // handles case of only child is being array
+      if (data.length === 1) {
+        const {
+          _, // eslint-disable-line no-unused-vars
+          $, // eslint-disable-line no-unused-vars
+          ...otherKeys
+        } = data[0];
+        if (!Object.keys(otherKeys).length) {
+          return this._prettifyJSON(data[0]);
+        }
+      }
+
       return data.map((item: any): any => {
         const prettifiedItem = this._prettifyJSON(item);
 
         // if (typeof prettifiedItem === 'object' && !(prettifiedItem instanceof Array)) {
         //   const keys = Object.keys(prettifiedItem);
         //   if (keys.length === 1) {
-        //     return prettifiedItem[keys[0]];
+        //      return prettifiedItem[keys[0]];
         //   }
         // }
         return prettifiedItem;
@@ -116,5 +179,13 @@ export default class ResponseParser {
     }
 
     return result;
+  }
+
+  /**
+   * returns method name
+   * @returns {string}
+   */
+  getMethodName(): string {
+    return `OTA_${this._config.feature}RS`;
   }
 }

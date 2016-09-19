@@ -77,7 +77,7 @@ export default class CriterionParser {
         builderJSON.Address = {
           ...builderJSON.Address,
           StateProv: {
-            $: { Code: data.Address.StateCode },
+            $: { StateCode: data.Address.StateCode },
             _: data.Address.StateCode
           }
         };
