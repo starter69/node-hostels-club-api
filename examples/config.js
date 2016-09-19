@@ -1,5 +1,5 @@
 module.exports = {
-  siteID: '2345',
-  password: 'HOpert123@',
+  siteID: '1111',
+  password: '****',
   debug: true
 };
