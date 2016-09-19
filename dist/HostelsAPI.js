@@ -7,7 +7,7 @@
 		exports["HostelsAPI"] = factory(require("net"), require("url"), require("punycode"), require("util"), require("crypto"), require("http"), require("https"), require("stream"), require("zlib"), require("buffer"), require("events"), require("path"), require("dgram"), require("dns"), require("querystring"), require("assert"), require("string_decoder"), require("tls"), require("fs"), require("tty"), require("timers"));
 	else
 		root["HostelsAPI"] = factory(root["net"], root["url"], root["punycode"], root["util"], root["crypto"], root["http"], root["https"], root["stream"], root["zlib"], root["buffer"], root["events"], root["path"], root["dgram"], root["dns"], root["querystring"], root["assert"], root["string_decoder"], root["tls"], root["fs"], root["tty"], root["timers"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_8__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_19__, __WEBPACK_EXTERNAL_MODULE_20__, __WEBPACK_EXTERNAL_MODULE_21__, __WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__, __WEBPACK_EXTERNAL_MODULE_40__, __WEBPACK_EXTERNAL_MODULE_44__, __WEBPACK_EXTERNAL_MODULE_45__, __WEBPACK_EXTERNAL_MODULE_54__, __WEBPACK_EXTERNAL_MODULE_59__, __WEBPACK_EXTERNAL_MODULE_114__, __WEBPACK_EXTERNAL_MODULE_117__, __WEBPACK_EXTERNAL_MODULE_121__, __WEBPACK_EXTERNAL_MODULE_170__, __WEBPACK_EXTERNAL_MODULE_319__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_8__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_17__, __WEBPACK_EXTERNAL_MODULE_19__, __WEBPACK_EXTERNAL_MODULE_20__, __WEBPACK_EXTERNAL_MODULE_21__, __WEBPACK_EXTERNAL_MODULE_22__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__, __WEBPACK_EXTERNAL_MODULE_40__, __WEBPACK_EXTERNAL_MODULE_44__, __WEBPACK_EXTERNAL_MODULE_45__, __WEBPACK_EXTERNAL_MODULE_54__, __WEBPACK_EXTERNAL_MODULE_59__, __WEBPACK_EXTERNAL_MODULE_114__, __WEBPACK_EXTERNAL_MODULE_117__, __WEBPACK_EXTERNAL_MODULE_121__, __WEBPACK_EXTERNAL_MODULE_171__, __WEBPACK_EXTERNAL_MODULE_320__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -60,27 +60,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _request = __webpack_require__(1);
 	
 	var _request2 = _interopRequireDefault(_request);
 	
-	var _debug = __webpack_require__(169);
+	var _logger = __webpack_require__(169);
 	
-	var _debug2 = _interopRequireDefault(_debug);
+	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _HotelDescriptiveInfoRequest = __webpack_require__(173);
+	var _HotelDescriptiveInfoRequestParser = __webpack_require__(174);
 	
-	var _HotelDescriptiveInfoRequest2 = _interopRequireDefault(_HotelDescriptiveInfoRequest);
+	var _HotelDescriptiveInfoRequestParser2 = _interopRequireDefault(_HotelDescriptiveInfoRequestParser);
 	
-	var _ResponseParser = __webpack_require__(321);
+	var _HotelAvailRequestParser = __webpack_require__(322);
+	
+	var _HotelAvailRequestParser2 = _interopRequireDefault(_HotelAvailRequestParser);
+	
+	var _DoReservationRequestParser = __webpack_require__(324);
+	
+	var _DoReservationRequestParser2 = _interopRequireDefault(_DoReservationRequestParser);
+	
+	var _ReadReservationRequestParser = __webpack_require__(325);
+	
+	var _ReadReservationRequestParser2 = _interopRequireDefault(_ReadReservationRequestParser);
+	
+	var _CancelReservationRequestParser = __webpack_require__(326);
+	
+	var _CancelReservationRequestParser2 = _interopRequireDefault(_CancelReservationRequestParser);
+	
+	var _HotelSearchRequestParser = __webpack_require__(327);
+	
+	var _HotelSearchRequestParser2 = _interopRequireDefault(_HotelSearchRequestParser);
+	
+	var _ResponseParser = __webpack_require__(328);
 	
 	var _ResponseParser2 = _interopRequireDefault(_ResponseParser);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -88,7 +108,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  siteID: '',
 	  password: '',
 	  language: 'en',
-	  currency: 'USD'
+	  currency: 'USD',
+	  debug: true
 	};
 	
 	/**
@@ -102,14 +123,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @method constructor
 	   * @param { Object } config - initial config
 	   */
-	
-	  /**
-	   * @property config
-	   */
 	  function HostelsAPI(config) {
 	    _classCallCheck(this, HostelsAPI);
 	
-	    this._log = (0, _debug2.default)('hostels-api');
 	    this.setConfig(Object.assign({}, initialConfig, config));
 	  }
 	
@@ -118,9 +134,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param { Object } config - new config to set
 	   */
 	
-	
 	  /**
-	   * @property _log
+	   * @property config
 	   */
 	
 	
@@ -140,33 +155,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_call',
 	    value: function _call(requestXML) {
-	      var _this = this;
-	
 	      var uri = this._getAPIEndpoint();
-	      this._log('Making request to ' + uri);
-	      // this._log(`${encodeURIComponent(requestXML)}`);
+	      (0, _logger2.default)('Making request to ' + uri);
+	      // NOTE
+	      // encodeURIComponent returns malformed XML error
+	      // You should just change ampersands to proper code
+	      (0, _logger2.default)('' + requestXML);
+	      var requestData = requestXML.replace(/&/g, '%26');
 	      return new Promise(function (resolve, reject) {
 	        _request2.default.post({
 	          uri: uri,
 	          form: {
-	            OTA_request: encodeURIComponent(requestXML)
+	            OTA_request: requestData
 	          }
 	        }, function (err, httpResp, responseBody) {
+	          (0, _logger2.default)('Response result ' + responseBody);
 	          if (err) {
-	            _this._log('Response error code ' + err.code);
-	            _this._log(responseBody);
+	            (0, _logger2.default)('Response error code ' + err.code);
 	            reject(responseBody);
 	          } else {
-	            _this._log('Response http status ' + httpResp.statusCode);
-	            _this._log('Response result ' + responseBody);
-	            _ResponseParser2.default.parseXML(responseBody).then(function (result) {
-	              _this._log(result);
-	              _this._log(JSON.stringify(result));
-	              resolve(result);
-	            }).catch(function (error) {
-	              _this._log(error);
-	              reject(err);
-	            });
+	            (0, _logger2.default)('Response http status ' + httpResp.statusCode);
+	            resolve(responseBody);
 	          }
 	        });
 	      });
@@ -181,27 +190,120 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_getAPIEndpoint',
 	    value: function _getAPIEndpoint() {
-	      return 'http://52.44.44.21:5050/xml/xml.php';
+	      return this.config.debug ? 'http://52.44.44.21:5050/xml/xml.php' : 'https://www.hostelspoint.com/xml/xml.php';
 	    }
 	
 	    /**
 	     * Retrives hotel descriptive info
+	     * @param {string} hotelCode
+	     * @return {Promise<any>}
 	     */
 	
 	  }, {
 	    key: 'getHotelDescriptiveInfo',
 	    value: function getHotelDescriptiveInfo(hotelCode) {
-	      var params = [];
-	      if (typeof hotelCode === 'string') {
-	        params.push(hotelCode);
-	      } else {
-	        params.push.apply(params, _toConsumableArray(hotelCode));
-	      }
+	      var params = [hotelCode];
 	
-	      var req = new _HotelDescriptiveInfoRequest2.default(this.config, params.map(function (code) {
+	      var req = new _HotelDescriptiveInfoRequestParser2.default(this.config, params.map(function (code) {
 	        return { HotelCode: code };
 	      }));
-	      return this._call(req.getRequest());
+	      return this._call(req.getRequest()).then(function (responseXML) {
+	        var resParser = new _ResponseParser2.default({ feature: 'HotelDescriptiveInfo' });
+	        return resParser.parseXML(responseXML);
+	      }).catch(function (err) {
+	        (0, _logger2.default)(err);
+	      });
+	    }
+	
+	    /**
+	     * Returns hotel availability search result
+	     * @param {CriterionParamsType} criterion
+	     * @returns Promise<any>
+	     */
+	
+	  }, {
+	    key: 'getHotelAvailailability',
+	    value: function getHotelAvailailability(criterion) {
+	      var req = new _HotelAvailRequestParser2.default(_extends({}, this.config, { feature: 'Search' }), criterion);
+	      return this._call(req.getRequest()).then(function (responseXML) {
+	        var resParser = new _ResponseParser2.default({ feature: 'HotelAvail' });
+	        return resParser.parseXML(responseXML);
+	      }).catch(function (err) {
+	        (0, _logger2.default)(err);
+	      });
+	    }
+	
+	    /**
+	     * Search hotels with criteria
+	     * @param {CriterionParamsType} criterion
+	     * @param {HotelSearchRequestParserConfigType} config
+	     * @returns Promise<any>
+	     */
+	
+	  }, {
+	    key: 'searchHotels',
+	    value: function searchHotels(criterion, config) {
+	      var req = new _HotelSearchRequestParser2.default(Object.assign({}, this.config, config), criterion);
+	      return this._call(req.getRequest()).then(function (responseXML) {
+	        var resParser = new _ResponseParser2.default({ feature: 'HotelSearch' });
+	        return resParser.parseXML(responseXML);
+	      }).catch(function (err) {
+	        (0, _logger2.default)(err);
+	      });
+	    }
+	
+	    /**
+	     * Does hotel reservation with customer and credit card information
+	     * @param {DoReservationType} resData
+	     * @returns Promise<any>
+	     */
+	
+	  }, {
+	    key: 'doReservation',
+	    value: function doReservation(resData) {
+	      var req = new _DoReservationRequestParser2.default(this.config, resData);
+	      return this._call(req.getRequest()).then(function (responseXML) {
+	        var resParser = new _ResponseParser2.default({ feature: 'HotelRes' });
+	        return resParser.parseXML(responseXML);
+	      }).catch(function (err) {
+	        (0, _logger2.default)(err);
+	      });
+	    }
+	
+	    /**
+	     * Read the reservation which was made already
+	     * @param {UniqueIDType} resData
+	     * @returns Promise<any>
+	     */
+	
+	  }, {
+	    key: 'readReservation',
+	    value: function readReservation(data) {
+	      var req = new _ReadReservationRequestParser2.default(this.config, data);
+	      return this._call(req.getRequest()).then(function (responseXML) {
+	        var resParser = new _ResponseParser2.default({ feature: 'ResRetrieve' });
+	        return resParser.parseXML(responseXML);
+	      }).catch(function (err) {
+	        (0, _logger2.default)(err);
+	      });
+	    }
+	
+	    /**
+	     * Cancels the reservation which was made already
+	     * @param {CancelReservationType} cancelData
+	     * @returns Promise<any>
+	     */
+	
+	  }, {
+	    key: 'cancelReservation',
+	    value: function cancelReservation(cancelData) {
+	      var req = new _CancelReservationRequestParser2.default(this.config, cancelData);
+	      return this._call(req.getRequest()).then(function (responseXML) {
+	        var resParser = new _ResponseParser2.default({ feature: 'Cancel' });
+	        return resParser.parseXML(responseXML);
+	      }).catch(function (err) {
+	        (0, _logger2.default)(err);
+	      });
 	    }
 	  }]);
 	
@@ -47177,12 +47279,31 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _debug = __webpack_require__(170);
+	
+	var _debug2 = _interopRequireDefault(_debug);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = (0, _debug2.default)('hostels-api');
+	module.exports = exports['default'];
+
+/***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
 	
 	/**
 	 * Module dependencies.
 	 */
 	
-	var tty = __webpack_require__(170);
+	var tty = __webpack_require__(171);
 	var util = __webpack_require__(13);
 	
 	/**
@@ -47191,7 +47312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Expose `debug()` as the module.
 	 */
 	
-	exports = module.exports = __webpack_require__(171);
+	exports = module.exports = __webpack_require__(172);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -47389,13 +47510,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 170 */
+/* 171 */
 /***/ function(module, exports) {
 
 	module.exports = require("tty");
 
 /***/ },
-/* 171 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -47411,7 +47532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(172);
+	exports.humanize = __webpack_require__(173);
 	
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -47598,7 +47719,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 172 */
+/* 173 */
 /***/ function(module, exports) {
 
 	/**
@@ -47729,7 +47850,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 173 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47740,13 +47861,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _xml2js = __webpack_require__(174);
+	var _xml2js = __webpack_require__(175);
 	
 	var _xml2js2 = _interopRequireDefault(_xml2js);
 	
-	var _BaseRequest2 = __webpack_require__(320);
+	var _RequestParser2 = __webpack_require__(321);
 	
-	var _BaseRequest3 = _interopRequireDefault(_BaseRequest2);
+	var _RequestParser3 = _interopRequireDefault(_RequestParser2);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -47766,27 +47887,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  containCustomerReviews: true
 	};
 	
-	var HotelDescriptiveInfoRequest = function (_BaseRequest) {
-	  _inherits(HotelDescriptiveInfoRequest, _BaseRequest);
+	var HotelDescriptiveInfoRequestParser = function (_RequestParser) {
+	  _inherits(HotelDescriptiveInfoRequestParser, _RequestParser);
 	
 	  /**
 	   * object constructor
 	   */
-	  function HotelDescriptiveInfoRequest(config, data) {
-	    _classCallCheck(this, HotelDescriptiveInfoRequest);
+	  function HotelDescriptiveInfoRequestParser(config, data) {
+	    _classCallCheck(this, HotelDescriptiveInfoRequestParser);
 	
-	    return _possibleConstructorReturn(this, (HotelDescriptiveInfoRequest.__proto__ || Object.getPrototypeOf(HotelDescriptiveInfoRequest)).call(this, Object.assign({}, initialConfig, config), data));
+	    return _possibleConstructorReturn(this, (HotelDescriptiveInfoRequestParser.__proto__ || Object.getPrototypeOf(HotelDescriptiveInfoRequestParser)).call(this, Object.assign({}, initialConfig, config), data));
 	  }
 	
 	  /**
 	   * Returns XMLBuilder compatible object from request data
 	   * @private
-	   * @param {HotelDescriptiveInfoRequestType} req
+	   * @param {HotelDescriptiveInfoRequestParserType} req
 	   * @returns {Object}
 	   */
 	
 	
-	  _createClass(HotelDescriptiveInfoRequest, [{
+	  _createClass(HotelDescriptiveInfoRequestParser, [{
 	    key: '_makeHotelInfo',
 	    value: function _makeHotelInfo(req) {
 	      var config = this._config;
@@ -47837,7 +47958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getRequestBody',
 	    value: function getRequestBody(data) {
-	      var builder = new _xml2js2.default.Builder({ headless: true });
+	      var builder = new _xml2js2.default.Builder({ headless: true, renderOpts: { pretty: false } });
 	      return builder.buildObject({
 	        HotelDescriptiveInfos: {
 	          HotelDescriptiveInfo: data.map(this._makeHotelInfo.bind(this))
@@ -47857,18 +47978,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // NOTE adding attributes to root element is not working at the moment.
 	
-	      return '<?xml version="1.0" encoding="UTF-8"?>\n      <OTA_HotelDescriptiveInfoRQ EchoToken="1" Target="Production"\n      Version="1.002"\n      xmlns="http://www.opentravel.org/OTA/2003/05"\n      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n      xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05\n      OTA_HotelDescriptiveInfoRQ.xsd"  PrimaryLangID="' + language + '">\n      ' + this.getPOS() + '\n      ' + this.getRequestBody(this._data) + '\n      </OTA_HotelDescriptiveInfoRQ>';
+	      return '<?xml version="1.0" encoding="UTF-8"?>\n      <OTA_HotelDescriptiveInfoRQ EchoToken="1" Target="' + this._getEnv() + '"\n      Version="1.002"\n      xmlns="http://www.opentravel.org/OTA/2003/05"\n      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n      xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05\n      OTA_HotelDescriptiveInfoRQ.xsd"  PrimaryLangID="' + language + '">\n      ' + this.getPOS() + '\n      ' + this.getRequestBody(this._data) + '\n      </OTA_HotelDescriptiveInfoRQ>';
 	    }
 	  }]);
 	
-	  return HotelDescriptiveInfoRequest;
-	}(_BaseRequest3.default);
+	  return HotelDescriptiveInfoRequestParser;
+	}(_RequestParser3.default);
 	
-	exports.default = HotelDescriptiveInfoRequest;
+	exports.default = HotelDescriptiveInfoRequestParser;
 	module.exports = exports['default'];
 
 /***/ },
-/* 174 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.10.0
@@ -47879,17 +48000,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    hasProp = {}.hasOwnProperty,
 	    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 	
-	  sax = __webpack_require__(175);
+	  sax = __webpack_require__(176);
 	
 	  events = __webpack_require__(33);
 	
-	  builder = __webpack_require__(176);
+	  builder = __webpack_require__(177);
 	
-	  bom = __webpack_require__(317);
+	  bom = __webpack_require__(318);
 	
-	  processors = __webpack_require__(318);
+	  processors = __webpack_require__(319);
 	
-	  setImmediate = __webpack_require__(319).setImmediate;
+	  setImmediate = __webpack_require__(320).setImmediate;
 	
 	  isEmpty = function(thing) {
 	    return typeof thing === "object" && (thing != null) && Object.keys(thing).length === 0;
@@ -48417,7 +48538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 175 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;(function (sax) { // wrapper for non-node envs
@@ -49999,16 +50120,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 176 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLBuilder, assign;
 	
-	  assign = __webpack_require__(177);
+	  assign = __webpack_require__(178);
 	
-	  XMLBuilder = __webpack_require__(201);
+	  XMLBuilder = __webpack_require__(202);
 	
 	  module.exports.create = function(name, xmldec, doctype, options) {
 	    options = assign({}, xmldec, doctype, options);
@@ -50019,15 +50140,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 177 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(178),
-	    copyObject = __webpack_require__(180),
-	    createAssigner = __webpack_require__(181),
-	    isArrayLike = __webpack_require__(185),
-	    isPrototype = __webpack_require__(190),
-	    keys = __webpack_require__(191);
+	var assignValue = __webpack_require__(179),
+	    copyObject = __webpack_require__(181),
+	    createAssigner = __webpack_require__(182),
+	    isArrayLike = __webpack_require__(186),
+	    isPrototype = __webpack_require__(191),
+	    keys = __webpack_require__(192);
 	
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -50089,10 +50210,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 178 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(179);
+	var eq = __webpack_require__(180);
 	
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -50122,7 +50243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports) {
 
 	/**
@@ -50165,10 +50286,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(178);
+	var assignValue = __webpack_require__(179);
 	
 	/**
 	 * Copies properties of `source` to `object`.
@@ -50202,11 +50323,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseRest = __webpack_require__(182),
-	    isIterateeCall = __webpack_require__(184);
+	var baseRest = __webpack_require__(183),
+	    isIterateeCall = __webpack_require__(185);
 	
 	/**
 	 * Creates a function like `_.assign`.
@@ -50245,10 +50366,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var apply = __webpack_require__(183);
+	var apply = __webpack_require__(184);
 	
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeMax = Math.max;
@@ -50286,7 +50407,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports) {
 
 	/**
@@ -50313,13 +50434,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(179),
-	    isArrayLike = __webpack_require__(185),
-	    isIndex = __webpack_require__(189),
-	    isObject = __webpack_require__(187);
+	var eq = __webpack_require__(180),
+	    isArrayLike = __webpack_require__(186),
+	    isIndex = __webpack_require__(190),
+	    isObject = __webpack_require__(188);
 	
 	/**
 	 * Checks if the given arguments are from an iteratee call.
@@ -50349,11 +50470,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(186),
-	    isLength = __webpack_require__(188);
+	var isFunction = __webpack_require__(187),
+	    isLength = __webpack_require__(189);
 	
 	/**
 	 * Checks if `value` is array-like. A value is considered array-like if it's
@@ -50388,10 +50509,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(187);
+	var isObject = __webpack_require__(188);
 	
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]',
@@ -50435,7 +50556,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports) {
 
 	/**
@@ -50472,7 +50593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 188 */
+/* 189 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -50513,7 +50634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 189 */
+/* 190 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -50541,7 +50662,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 190 */
+/* 191 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -50565,12 +50686,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayLikeKeys = __webpack_require__(192),
-	    baseKeys = __webpack_require__(198),
-	    isArrayLike = __webpack_require__(185);
+	var arrayLikeKeys = __webpack_require__(193),
+	    baseKeys = __webpack_require__(199),
+	    isArrayLike = __webpack_require__(186);
 	
 	/**
 	 * Creates an array of the own enumerable property names of `object`.
@@ -50608,13 +50729,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseTimes = __webpack_require__(193),
-	    isArguments = __webpack_require__(194),
-	    isArray = __webpack_require__(197),
-	    isIndex = __webpack_require__(189);
+	var baseTimes = __webpack_require__(194),
+	    isArguments = __webpack_require__(195),
+	    isArray = __webpack_require__(198),
+	    isIndex = __webpack_require__(190);
 	
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -50653,7 +50774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports) {
 
 	/**
@@ -50679,10 +50800,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLikeObject = __webpack_require__(195);
+	var isArrayLikeObject = __webpack_require__(196);
 	
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]';
@@ -50731,11 +50852,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(185),
-	    isObjectLike = __webpack_require__(196);
+	var isArrayLike = __webpack_require__(186),
+	    isObjectLike = __webpack_require__(197);
 	
 	/**
 	 * This method is like `_.isArrayLike` except that it also checks if `value`
@@ -50770,7 +50891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports) {
 
 	/**
@@ -50805,7 +50926,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports) {
 
 	/**
@@ -50837,11 +50958,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 198 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isPrototype = __webpack_require__(190),
-	    nativeKeys = __webpack_require__(199);
+	var isPrototype = __webpack_require__(191),
+	    nativeKeys = __webpack_require__(200);
 	
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -50873,10 +50994,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 199 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(200);
+	var overArg = __webpack_require__(201);
 	
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = overArg(Object.keys, Object);
@@ -50885,7 +51006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports) {
 
 	/**
@@ -50906,20 +51027,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLBuilder, XMLDeclaration, XMLDocType, XMLElement, XMLStringifier;
 	
-	  XMLStringifier = __webpack_require__(202);
+	  XMLStringifier = __webpack_require__(203);
 	
-	  XMLDeclaration = __webpack_require__(203);
+	  XMLDeclaration = __webpack_require__(204);
 	
-	  XMLDocType = __webpack_require__(310);
+	  XMLDocType = __webpack_require__(311);
 	
-	  XMLElement = __webpack_require__(228);
+	  XMLElement = __webpack_require__(229);
 	
 	  module.exports = XMLBuilder = (function() {
 	    function XMLBuilder(name, options) {
@@ -50981,7 +51102,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports) {
 
 	// Generated by CoffeeScript 1.9.1
@@ -51157,7 +51278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
@@ -51166,11 +51287,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	    hasProp = {}.hasOwnProperty;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
-	  isObject = __webpack_require__(187);
+	  isObject = __webpack_require__(188);
 	
-	  XMLNode = __webpack_require__(207);
+	  XMLNode = __webpack_require__(208);
 	
 	  module.exports = XMLDeclaration = (function(superClass) {
 	    extend(XMLDeclaration, superClass);
@@ -51228,11 +51349,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseAssign = __webpack_require__(205),
-	    baseCreate = __webpack_require__(206);
+	var baseAssign = __webpack_require__(206),
+	    baseCreate = __webpack_require__(207);
 	
 	/**
 	 * Creates an object that inherits from the `prototype` object. If a
@@ -51277,11 +51398,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var copyObject = __webpack_require__(180),
-	    keys = __webpack_require__(191);
+	var copyObject = __webpack_require__(181),
+	    keys = __webpack_require__(192);
 	
 	/**
 	 * The base implementation of `_.assign` without support for multiple sources
@@ -51300,10 +51421,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(187);
+	var isObject = __webpack_require__(188);
 	
 	/** Built-in value references. */
 	var objectCreate = Object.create;
@@ -51324,7 +51445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 207 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
@@ -51332,11 +51453,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var XMLCData, XMLComment, XMLDeclaration, XMLDocType, XMLElement, XMLNode, XMLRaw, XMLText, isEmpty, isFunction, isObject,
 	    hasProp = {}.hasOwnProperty;
 	
-	  isObject = __webpack_require__(187);
+	  isObject = __webpack_require__(188);
 	
-	  isFunction = __webpack_require__(186);
+	  isFunction = __webpack_require__(187);
 	
-	  isEmpty = __webpack_require__(208);
+	  isEmpty = __webpack_require__(209);
 	
 	  XMLElement = null;
 	
@@ -51358,13 +51479,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.options = this.parent.options;
 	      this.stringify = this.parent.stringify;
 	      if (XMLElement === null) {
-	        XMLElement = __webpack_require__(228);
-	        XMLCData = __webpack_require__(308);
-	        XMLComment = __webpack_require__(309);
-	        XMLDeclaration = __webpack_require__(203);
-	        XMLDocType = __webpack_require__(310);
-	        XMLRaw = __webpack_require__(315);
-	        XMLText = __webpack_require__(316);
+	        XMLElement = __webpack_require__(229);
+	        XMLCData = __webpack_require__(309);
+	        XMLComment = __webpack_require__(310);
+	        XMLDeclaration = __webpack_require__(204);
+	        XMLDocType = __webpack_require__(311);
+	        XMLRaw = __webpack_require__(316);
+	        XMLText = __webpack_require__(317);
 	      }
 	    }
 	
@@ -51661,16 +51782,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 208 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getTag = __webpack_require__(209),
-	    isArguments = __webpack_require__(194),
-	    isArray = __webpack_require__(197),
-	    isArrayLike = __webpack_require__(185),
-	    isBuffer = __webpack_require__(225),
-	    isPrototype = __webpack_require__(190),
-	    nativeKeys = __webpack_require__(199);
+	var getTag = __webpack_require__(210),
+	    isArguments = __webpack_require__(195),
+	    isArray = __webpack_require__(198),
+	    isArrayLike = __webpack_require__(186),
+	    isBuffer = __webpack_require__(226),
+	    isPrototype = __webpack_require__(191),
+	    nativeKeys = __webpack_require__(200);
 	
 	/** `Object#toString` result references. */
 	var mapTag = '[object Map]',
@@ -51746,16 +51867,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var DataView = __webpack_require__(210),
-	    Map = __webpack_require__(220),
-	    Promise = __webpack_require__(221),
-	    Set = __webpack_require__(222),
-	    WeakMap = __webpack_require__(223),
-	    baseGetTag = __webpack_require__(224),
-	    toSource = __webpack_require__(218);
+	var DataView = __webpack_require__(211),
+	    Map = __webpack_require__(221),
+	    Promise = __webpack_require__(222),
+	    Set = __webpack_require__(223),
+	    WeakMap = __webpack_require__(224),
+	    baseGetTag = __webpack_require__(225),
+	    toSource = __webpack_require__(219);
 	
 	/** `Object#toString` result references. */
 	var mapTag = '[object Map]',
@@ -51821,11 +51942,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(211),
-	    root = __webpack_require__(216);
+	var getNative = __webpack_require__(212),
+	    root = __webpack_require__(217);
 	
 	/* Built-in method references that are verified to be native. */
 	var DataView = getNative(root, 'DataView');
@@ -51834,11 +51955,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsNative = __webpack_require__(212),
-	    getValue = __webpack_require__(219);
+	var baseIsNative = __webpack_require__(213),
+	    getValue = __webpack_require__(220);
 	
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -51857,14 +51978,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(186),
-	    isHostObject = __webpack_require__(213),
-	    isMasked = __webpack_require__(214),
-	    isObject = __webpack_require__(187),
-	    toSource = __webpack_require__(218);
+	var isFunction = __webpack_require__(187),
+	    isHostObject = __webpack_require__(214),
+	    isMasked = __webpack_require__(215),
+	    isObject = __webpack_require__(188),
+	    toSource = __webpack_require__(219);
 	
 	/**
 	 * Used to match `RegExp`
@@ -51911,7 +52032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 213 */
+/* 214 */
 /***/ function(module, exports) {
 
 	/**
@@ -51937,10 +52058,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var coreJsData = __webpack_require__(215);
+	var coreJsData = __webpack_require__(216);
 	
 	/** Used to detect methods masquerading as native. */
 	var maskSrcKey = (function() {
@@ -51963,10 +52084,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var root = __webpack_require__(216);
+	var root = __webpack_require__(217);
 	
 	/** Used to detect overreaching core-js shims. */
 	var coreJsData = root['__core-js_shared__'];
@@ -51975,10 +52096,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var freeGlobal = __webpack_require__(217);
+	var freeGlobal = __webpack_require__(218);
 	
 	/** Detect free variable `self`. */
 	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -51990,7 +52111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 217 */
+/* 218 */
 /***/ function(module, exports) {
 
 	/** Detect free variable `global` from Node.js. */
@@ -52000,7 +52121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -52032,7 +52153,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports) {
 
 	/**
@@ -52051,11 +52172,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(211),
-	    root = __webpack_require__(216);
+	var getNative = __webpack_require__(212),
+	    root = __webpack_require__(217);
 	
 	/* Built-in method references that are verified to be native. */
 	var Map = getNative(root, 'Map');
@@ -52064,11 +52185,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(211),
-	    root = __webpack_require__(216);
+	var getNative = __webpack_require__(212),
+	    root = __webpack_require__(217);
 	
 	/* Built-in method references that are verified to be native. */
 	var Promise = getNative(root, 'Promise');
@@ -52077,11 +52198,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(211),
-	    root = __webpack_require__(216);
+	var getNative = __webpack_require__(212),
+	    root = __webpack_require__(217);
 	
 	/* Built-in method references that are verified to be native. */
 	var Set = getNative(root, 'Set');
@@ -52090,11 +52211,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 223 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(211),
-	    root = __webpack_require__(216);
+	var getNative = __webpack_require__(212),
+	    root = __webpack_require__(217);
 	
 	/* Built-in method references that are verified to be native. */
 	var WeakMap = getNative(root, 'WeakMap');
@@ -52103,7 +52224,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 224 */
+/* 225 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -52131,11 +52252,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 225 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(216),
-	    stubFalse = __webpack_require__(227);
+	/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(217),
+	    stubFalse = __webpack_require__(228);
 	
 	/** Detect free variable `exports`. */
 	var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -52173,10 +52294,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = isBuffer;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(226)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(227)(module)))
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -52192,7 +52313,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports) {
 
 	/**
@@ -52216,7 +52337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
@@ -52225,19 +52346,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	    hasProp = {}.hasOwnProperty;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
-	  isObject = __webpack_require__(187);
+	  isObject = __webpack_require__(188);
 	
-	  isFunction = __webpack_require__(186);
+	  isFunction = __webpack_require__(187);
 	
-	  every = __webpack_require__(229);
+	  every = __webpack_require__(230);
 	
-	  XMLNode = __webpack_require__(207);
+	  XMLNode = __webpack_require__(208);
 	
-	  XMLAttribute = __webpack_require__(306);
+	  XMLAttribute = __webpack_require__(307);
 	
-	  XMLProcessingInstruction = __webpack_require__(307);
+	  XMLProcessingInstruction = __webpack_require__(308);
 	
 	  module.exports = XMLElement = (function(superClass) {
 	    extend(XMLElement, superClass);
@@ -52434,14 +52555,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEvery = __webpack_require__(230),
-	    baseEvery = __webpack_require__(231),
-	    baseIteratee = __webpack_require__(237),
-	    isArray = __webpack_require__(197),
-	    isIterateeCall = __webpack_require__(184);
+	var arrayEvery = __webpack_require__(231),
+	    baseEvery = __webpack_require__(232),
+	    baseIteratee = __webpack_require__(238),
+	    isArray = __webpack_require__(198),
+	    isIterateeCall = __webpack_require__(185);
 	
 	/**
 	 * Checks if `predicate` returns truthy for **all** elements of `collection`.
@@ -52497,7 +52618,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports) {
 
 	/**
@@ -52526,10 +52647,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(232);
+	var baseEach = __webpack_require__(233);
 	
 	/**
 	 * The base implementation of `_.every` without support for iteratee shorthands.
@@ -52553,11 +52674,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(233),
-	    createBaseEach = __webpack_require__(236);
+	var baseForOwn = __webpack_require__(234),
+	    createBaseEach = __webpack_require__(237);
 	
 	/**
 	 * The base implementation of `_.forEach` without support for iteratee shorthands.
@@ -52573,11 +52694,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(234),
-	    keys = __webpack_require__(191);
+	var baseFor = __webpack_require__(235),
+	    keys = __webpack_require__(192);
 	
 	/**
 	 * The base implementation of `_.forOwn` without support for iteratee shorthands.
@@ -52595,10 +52716,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(235);
+	var createBaseFor = __webpack_require__(236);
 	
 	/**
 	 * The base implementation of `baseForOwn` which iterates over `object`
@@ -52617,7 +52738,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports) {
 
 	/**
@@ -52648,10 +52769,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(185);
+	var isArrayLike = __webpack_require__(186);
 	
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -52686,14 +52807,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(238),
-	    baseMatchesProperty = __webpack_require__(288),
-	    identity = __webpack_require__(302),
-	    isArray = __webpack_require__(197),
-	    property = __webpack_require__(303);
+	var baseMatches = __webpack_require__(239),
+	    baseMatchesProperty = __webpack_require__(289),
+	    identity = __webpack_require__(303),
+	    isArray = __webpack_require__(198),
+	    property = __webpack_require__(304);
 	
 	/**
 	 * The base implementation of `_.iteratee`.
@@ -52723,12 +52844,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(239),
-	    getMatchData = __webpack_require__(285),
-	    matchesStrictComparable = __webpack_require__(287);
+	var baseIsMatch = __webpack_require__(240),
+	    getMatchData = __webpack_require__(286),
+	    matchesStrictComparable = __webpack_require__(288);
 	
 	/**
 	 * The base implementation of `_.matches` which doesn't clone `source`.
@@ -52751,11 +52872,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Stack = __webpack_require__(240),
-	    baseIsEqual = __webpack_require__(268);
+	var Stack = __webpack_require__(241),
+	    baseIsEqual = __webpack_require__(269);
 	
 	/** Used to compose bitmasks for comparison styles. */
 	var UNORDERED_COMPARE_FLAG = 1,
@@ -52819,15 +52940,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ListCache = __webpack_require__(241),
-	    stackClear = __webpack_require__(248),
-	    stackDelete = __webpack_require__(249),
-	    stackGet = __webpack_require__(250),
-	    stackHas = __webpack_require__(251),
-	    stackSet = __webpack_require__(252);
+	var ListCache = __webpack_require__(242),
+	    stackClear = __webpack_require__(249),
+	    stackDelete = __webpack_require__(250),
+	    stackGet = __webpack_require__(251),
+	    stackHas = __webpack_require__(252),
+	    stackSet = __webpack_require__(253);
 	
 	/**
 	 * Creates a stack cache object to store key-value pairs.
@@ -52851,14 +52972,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var listCacheClear = __webpack_require__(242),
-	    listCacheDelete = __webpack_require__(243),
-	    listCacheGet = __webpack_require__(245),
-	    listCacheHas = __webpack_require__(246),
-	    listCacheSet = __webpack_require__(247);
+	var listCacheClear = __webpack_require__(243),
+	    listCacheDelete = __webpack_require__(244),
+	    listCacheGet = __webpack_require__(246),
+	    listCacheHas = __webpack_require__(247),
+	    listCacheSet = __webpack_require__(248);
 	
 	/**
 	 * Creates an list cache object.
@@ -52889,7 +53010,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports) {
 
 	/**
@@ -52907,10 +53028,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(244);
+	var assocIndexOf = __webpack_require__(245);
 	
 	/** Used for built-in method references. */
 	var arrayProto = Array.prototype;
@@ -52947,10 +53068,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(179);
+	var eq = __webpack_require__(180);
 	
 	/**
 	 * Gets the index at which the `key` is found in `array` of key-value pairs.
@@ -52974,10 +53095,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(244);
+	var assocIndexOf = __webpack_require__(245);
 	
 	/**
 	 * Gets the list cache value for `key`.
@@ -52999,10 +53120,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(244);
+	var assocIndexOf = __webpack_require__(245);
 	
 	/**
 	 * Checks if a list cache value for `key` exists.
@@ -53021,10 +53142,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(244);
+	var assocIndexOf = __webpack_require__(245);
 	
 	/**
 	 * Sets the list cache `key` to `value`.
@@ -53052,10 +53173,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ListCache = __webpack_require__(241);
+	var ListCache = __webpack_require__(242);
 	
 	/**
 	 * Removes all key-value entries from the stack.
@@ -53072,7 +53193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports) {
 
 	/**
@@ -53092,7 +53213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports) {
 
 	/**
@@ -53112,7 +53233,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports) {
 
 	/**
@@ -53132,12 +53253,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ListCache = __webpack_require__(241),
-	    Map = __webpack_require__(220),
-	    MapCache = __webpack_require__(253);
+	var ListCache = __webpack_require__(242),
+	    Map = __webpack_require__(221),
+	    MapCache = __webpack_require__(254);
 	
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -53170,14 +53291,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var mapCacheClear = __webpack_require__(254),
-	    mapCacheDelete = __webpack_require__(262),
-	    mapCacheGet = __webpack_require__(265),
-	    mapCacheHas = __webpack_require__(266),
-	    mapCacheSet = __webpack_require__(267);
+	var mapCacheClear = __webpack_require__(255),
+	    mapCacheDelete = __webpack_require__(263),
+	    mapCacheGet = __webpack_require__(266),
+	    mapCacheHas = __webpack_require__(267),
+	    mapCacheSet = __webpack_require__(268);
 	
 	/**
 	 * Creates a map cache object to store key-value pairs.
@@ -53208,12 +53329,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Hash = __webpack_require__(255),
-	    ListCache = __webpack_require__(241),
-	    Map = __webpack_require__(220);
+	var Hash = __webpack_require__(256),
+	    ListCache = __webpack_require__(242),
+	    Map = __webpack_require__(221);
 	
 	/**
 	 * Removes all key-value entries from the map.
@@ -53234,14 +53355,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var hashClear = __webpack_require__(256),
-	    hashDelete = __webpack_require__(258),
-	    hashGet = __webpack_require__(259),
-	    hashHas = __webpack_require__(260),
-	    hashSet = __webpack_require__(261);
+	var hashClear = __webpack_require__(257),
+	    hashDelete = __webpack_require__(259),
+	    hashGet = __webpack_require__(260),
+	    hashHas = __webpack_require__(261),
+	    hashSet = __webpack_require__(262);
 	
 	/**
 	 * Creates a hash object.
@@ -53272,10 +53393,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var nativeCreate = __webpack_require__(257);
+	var nativeCreate = __webpack_require__(258);
 	
 	/**
 	 * Removes all key-value entries from the hash.
@@ -53292,10 +53413,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(211);
+	var getNative = __webpack_require__(212);
 	
 	/* Built-in method references that are verified to be native. */
 	var nativeCreate = getNative(Object, 'create');
@@ -53304,7 +53425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports) {
 
 	/**
@@ -53325,10 +53446,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var nativeCreate = __webpack_require__(257);
+	var nativeCreate = __webpack_require__(258);
 	
 	/** Used to stand-in for `undefined` hash values. */
 	var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -53361,10 +53482,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var nativeCreate = __webpack_require__(257);
+	var nativeCreate = __webpack_require__(258);
 	
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -53390,10 +53511,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var nativeCreate = __webpack_require__(257);
+	var nativeCreate = __webpack_require__(258);
 	
 	/** Used to stand-in for `undefined` hash values. */
 	var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -53418,10 +53539,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getMapData = __webpack_require__(263);
+	var getMapData = __webpack_require__(264);
 	
 	/**
 	 * Removes `key` and its value from the map.
@@ -53440,10 +53561,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isKeyable = __webpack_require__(264);
+	var isKeyable = __webpack_require__(265);
 	
 	/**
 	 * Gets the data for `map`.
@@ -53464,7 +53585,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports) {
 
 	/**
@@ -53485,10 +53606,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getMapData = __webpack_require__(263);
+	var getMapData = __webpack_require__(264);
 	
 	/**
 	 * Gets the map value for `key`.
@@ -53507,10 +53628,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getMapData = __webpack_require__(263);
+	var getMapData = __webpack_require__(264);
 	
 	/**
 	 * Checks if a map value for `key` exists.
@@ -53529,10 +53650,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getMapData = __webpack_require__(263);
+	var getMapData = __webpack_require__(264);
 	
 	/**
 	 * Sets the map `key` to `value`.
@@ -53553,12 +53674,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(269),
-	    isObject = __webpack_require__(187),
-	    isObjectLike = __webpack_require__(196);
+	var baseIsEqualDeep = __webpack_require__(270),
+	    isObject = __webpack_require__(188),
+	    isObjectLike = __webpack_require__(197);
 	
 	/**
 	 * The base implementation of `_.isEqual` which supports partial comparisons
@@ -53589,17 +53710,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 269 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Stack = __webpack_require__(240),
-	    equalArrays = __webpack_require__(270),
-	    equalByTag = __webpack_require__(275),
-	    equalObjects = __webpack_require__(280),
-	    getTag = __webpack_require__(209),
-	    isArray = __webpack_require__(197),
-	    isHostObject = __webpack_require__(213),
-	    isTypedArray = __webpack_require__(281);
+	var Stack = __webpack_require__(241),
+	    equalArrays = __webpack_require__(271),
+	    equalByTag = __webpack_require__(276),
+	    equalObjects = __webpack_require__(281),
+	    getTag = __webpack_require__(210),
+	    isArray = __webpack_require__(198),
+	    isHostObject = __webpack_require__(214),
+	    isTypedArray = __webpack_require__(282);
 	
 	/** Used to compose bitmasks for comparison styles. */
 	var PARTIAL_COMPARE_FLAG = 2;
@@ -53677,11 +53798,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SetCache = __webpack_require__(271),
-	    arraySome = __webpack_require__(274);
+	var SetCache = __webpack_require__(272),
+	    arraySome = __webpack_require__(275);
 	
 	/** Used to compose bitmasks for comparison styles. */
 	var UNORDERED_COMPARE_FLAG = 1,
@@ -53766,12 +53887,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 271 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MapCache = __webpack_require__(253),
-	    setCacheAdd = __webpack_require__(272),
-	    setCacheHas = __webpack_require__(273);
+	var MapCache = __webpack_require__(254),
+	    setCacheAdd = __webpack_require__(273),
+	    setCacheHas = __webpack_require__(274);
 	
 	/**
 	 *
@@ -53799,7 +53920,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports) {
 
 	/** Used to stand-in for `undefined` hash values. */
@@ -53824,7 +53945,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports) {
 
 	/**
@@ -53844,7 +53965,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports) {
 
 	/**
@@ -53873,15 +53994,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Symbol = __webpack_require__(276),
-	    Uint8Array = __webpack_require__(277),
-	    eq = __webpack_require__(179),
-	    equalArrays = __webpack_require__(270),
-	    mapToArray = __webpack_require__(278),
-	    setToArray = __webpack_require__(279);
+	var Symbol = __webpack_require__(277),
+	    Uint8Array = __webpack_require__(278),
+	    eq = __webpack_require__(180),
+	    equalArrays = __webpack_require__(271),
+	    mapToArray = __webpack_require__(279),
+	    setToArray = __webpack_require__(280);
 	
 	/** Used to compose bitmasks for comparison styles. */
 	var UNORDERED_COMPARE_FLAG = 1,
@@ -53992,10 +54113,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var root = __webpack_require__(216);
+	var root = __webpack_require__(217);
 	
 	/** Built-in value references. */
 	var Symbol = root.Symbol;
@@ -54004,10 +54125,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var root = __webpack_require__(216);
+	var root = __webpack_require__(217);
 	
 	/** Built-in value references. */
 	var Uint8Array = root.Uint8Array;
@@ -54016,7 +54137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports) {
 
 	/**
@@ -54040,7 +54161,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports) {
 
 	/**
@@ -54064,10 +54185,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(191);
+	var keys = __webpack_require__(192);
 	
 	/** Used to compose bitmasks for comparison styles. */
 	var PARTIAL_COMPARE_FLAG = 2;
@@ -54160,12 +54281,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsTypedArray = __webpack_require__(282),
-	    baseUnary = __webpack_require__(283),
-	    nodeUtil = __webpack_require__(284);
+	var baseIsTypedArray = __webpack_require__(283),
+	    baseUnary = __webpack_require__(284),
+	    nodeUtil = __webpack_require__(285);
 	
 	/* Node.js helper references. */
 	var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -54193,11 +54314,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(188),
-	    isObjectLike = __webpack_require__(196);
+	var isLength = __webpack_require__(189),
+	    isObjectLike = __webpack_require__(197);
 	
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -54268,7 +54389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports) {
 
 	/**
@@ -54288,10 +54409,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(217);
+	/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(218);
 	
 	/** Detect free variable `exports`. */
 	var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -54314,14 +54435,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = nodeUtil;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(226)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(227)(module)))
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(286),
-	    keys = __webpack_require__(191);
+	var isStrictComparable = __webpack_require__(287),
+	    keys = __webpack_require__(192);
 	
 	/**
 	 * Gets the property names, values, and compare flags of `object`.
@@ -54347,10 +54468,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(187);
+	var isObject = __webpack_require__(188);
 	
 	/**
 	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -54368,7 +54489,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports) {
 
 	/**
@@ -54394,16 +54515,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(268),
-	    get = __webpack_require__(289),
-	    hasIn = __webpack_require__(299),
-	    isKey = __webpack_require__(297),
-	    isStrictComparable = __webpack_require__(286),
-	    matchesStrictComparable = __webpack_require__(287),
-	    toKey = __webpack_require__(298);
+	var baseIsEqual = __webpack_require__(269),
+	    get = __webpack_require__(290),
+	    hasIn = __webpack_require__(300),
+	    isKey = __webpack_require__(298),
+	    isStrictComparable = __webpack_require__(287),
+	    matchesStrictComparable = __webpack_require__(288),
+	    toKey = __webpack_require__(299);
 	
 	/** Used to compose bitmasks for comparison styles. */
 	var UNORDERED_COMPARE_FLAG = 1,
@@ -54433,10 +54554,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(290);
+	var baseGet = __webpack_require__(291);
 	
 	/**
 	 * Gets the value at `path` of `object`. If the resolved value is
@@ -54472,12 +54593,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var castPath = __webpack_require__(291),
-	    isKey = __webpack_require__(297),
-	    toKey = __webpack_require__(298);
+	var castPath = __webpack_require__(292),
+	    isKey = __webpack_require__(298),
+	    toKey = __webpack_require__(299);
 	
 	/**
 	 * The base implementation of `_.get` without support for default values.
@@ -54503,11 +54624,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(197),
-	    stringToPath = __webpack_require__(292);
+	var isArray = __webpack_require__(198),
+	    stringToPath = __webpack_require__(293);
 	
 	/**
 	 * Casts `value` to a path array if it's not one.
@@ -54524,11 +54645,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var memoize = __webpack_require__(293),
-	    toString = __webpack_require__(294);
+	var memoize = __webpack_require__(294),
+	    toString = __webpack_require__(295);
 	
 	/** Used to match property names within property paths. */
 	var reLeadingDot = /^\./,
@@ -54561,10 +54682,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MapCache = __webpack_require__(253);
+	var MapCache = __webpack_require__(254);
 	
 	/** Used as the `TypeError` message for "Functions" methods. */
 	var FUNC_ERROR_TEXT = 'Expected a function';
@@ -54640,10 +54761,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(295);
+	var baseToString = __webpack_require__(296);
 	
 	/**
 	 * Converts `value` to a string. An empty string is returned for `null`
@@ -54674,11 +54795,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Symbol = __webpack_require__(276),
-	    isSymbol = __webpack_require__(296);
+	var Symbol = __webpack_require__(277),
+	    isSymbol = __webpack_require__(297);
 	
 	/** Used as references for various `Number` constants. */
 	var INFINITY = 1 / 0;
@@ -54711,10 +54832,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(196);
+	var isObjectLike = __webpack_require__(197);
 	
 	/** `Object#toString` result references. */
 	var symbolTag = '[object Symbol]';
@@ -54755,11 +54876,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(197),
-	    isSymbol = __webpack_require__(296);
+	var isArray = __webpack_require__(198),
+	    isSymbol = __webpack_require__(297);
 	
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
@@ -54790,10 +54911,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isSymbol = __webpack_require__(296);
+	var isSymbol = __webpack_require__(297);
 	
 	/** Used as references for various `Number` constants. */
 	var INFINITY = 1 / 0;
@@ -54817,11 +54938,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseHasIn = __webpack_require__(300),
-	    hasPath = __webpack_require__(301);
+	var baseHasIn = __webpack_require__(301),
+	    hasPath = __webpack_require__(302);
 	
 	/**
 	 * Checks if `path` is a direct or inherited property of `object`.
@@ -54857,7 +54978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 300 */
+/* 301 */
 /***/ function(module, exports) {
 
 	/**
@@ -54876,16 +54997,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var castPath = __webpack_require__(291),
-	    isArguments = __webpack_require__(194),
-	    isArray = __webpack_require__(197),
-	    isIndex = __webpack_require__(189),
-	    isKey = __webpack_require__(297),
-	    isLength = __webpack_require__(188),
-	    toKey = __webpack_require__(298);
+	var castPath = __webpack_require__(292),
+	    isArguments = __webpack_require__(195),
+	    isArray = __webpack_require__(198),
+	    isIndex = __webpack_require__(190),
+	    isKey = __webpack_require__(298),
+	    isLength = __webpack_require__(189),
+	    toKey = __webpack_require__(299);
 	
 	/**
 	 * Checks if `path` exists on `object`.
@@ -54922,7 +55043,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports) {
 
 	/**
@@ -54949,13 +55070,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 303 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(304),
-	    basePropertyDeep = __webpack_require__(305),
-	    isKey = __webpack_require__(297),
-	    toKey = __webpack_require__(298);
+	var baseProperty = __webpack_require__(305),
+	    basePropertyDeep = __webpack_require__(306),
+	    isKey = __webpack_require__(298),
+	    toKey = __webpack_require__(299);
 	
 	/**
 	 * Creates a function that returns the value at `path` of a given object.
@@ -54987,7 +55108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 304 */
+/* 305 */
 /***/ function(module, exports) {
 
 	/**
@@ -55007,10 +55128,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 305 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(290);
+	var baseGet = __webpack_require__(291);
 	
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -55029,14 +55150,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 306 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLAttribute, create;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
 	  module.exports = XMLAttribute = (function() {
 	    function XMLAttribute(parent, name, value) {
@@ -55067,14 +55188,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 307 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLProcessingInstruction, create;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
 	  module.exports = XMLProcessingInstruction = (function() {
 	    function XMLProcessingInstruction(parent, target, value) {
@@ -55124,7 +55245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 308 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
@@ -55133,9 +55254,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	    hasProp = {}.hasOwnProperty;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
-	  XMLNode = __webpack_require__(207);
+	  XMLNode = __webpack_require__(208);
 	
 	  module.exports = XMLCData = (function(superClass) {
 	    extend(XMLCData, superClass);
@@ -55179,7 +55300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 309 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
@@ -55188,9 +55309,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	    hasProp = {}.hasOwnProperty;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
-	  XMLNode = __webpack_require__(207);
+	  XMLNode = __webpack_require__(208);
 	
 	  module.exports = XMLComment = (function(superClass) {
 	    extend(XMLComment, superClass);
@@ -55234,30 +55355,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 310 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLCData, XMLComment, XMLDTDAttList, XMLDTDElement, XMLDTDEntity, XMLDTDNotation, XMLDocType, XMLProcessingInstruction, create, isObject;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
-	  isObject = __webpack_require__(187);
+	  isObject = __webpack_require__(188);
 	
-	  XMLCData = __webpack_require__(308);
+	  XMLCData = __webpack_require__(309);
 	
-	  XMLComment = __webpack_require__(309);
+	  XMLComment = __webpack_require__(310);
 	
-	  XMLDTDAttList = __webpack_require__(311);
+	  XMLDTDAttList = __webpack_require__(312);
 	
-	  XMLDTDEntity = __webpack_require__(312);
+	  XMLDTDEntity = __webpack_require__(313);
 	
-	  XMLDTDElement = __webpack_require__(313);
+	  XMLDTDElement = __webpack_require__(314);
 	
-	  XMLDTDNotation = __webpack_require__(314);
+	  XMLDTDNotation = __webpack_require__(315);
 	
-	  XMLProcessingInstruction = __webpack_require__(307);
+	  XMLProcessingInstruction = __webpack_require__(308);
 	
 	  module.exports = XMLDocType = (function() {
 	    function XMLDocType(parent, pubID, sysID) {
@@ -55428,14 +55549,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 311 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLDTDAttList, create;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
 	  module.exports = XMLDTDAttList = (function() {
 	    function XMLDTDAttList(parent, elementName, attributeName, attributeType, defaultValueType, defaultValue) {
@@ -55502,16 +55623,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 312 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLDTDEntity, create, isObject;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
-	  isObject = __webpack_require__(187);
+	  isObject = __webpack_require__(188);
 	
 	  module.exports = XMLDTDEntity = (function() {
 	    function XMLDTDEntity(parent, pe, name, value) {
@@ -55592,14 +55713,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 313 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLDTDElement, create;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
 	  module.exports = XMLDTDElement = (function() {
 	    function XMLDTDElement(parent, name, value) {
@@ -55644,14 +55765,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 314 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
 	(function() {
 	  var XMLDTDNotation, create;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
 	  module.exports = XMLDTDNotation = (function() {
 	    function XMLDTDNotation(parent, name, value) {
@@ -55706,7 +55827,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 315 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
@@ -55715,9 +55836,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	    hasProp = {}.hasOwnProperty;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
-	  XMLNode = __webpack_require__(207);
+	  XMLNode = __webpack_require__(208);
 	
 	  module.exports = XMLRaw = (function(superClass) {
 	    extend(XMLRaw, superClass);
@@ -55761,7 +55882,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Generated by CoffeeScript 1.9.1
@@ -55770,9 +55891,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
 	    hasProp = {}.hasOwnProperty;
 	
-	  create = __webpack_require__(204);
+	  create = __webpack_require__(205);
 	
-	  XMLNode = __webpack_require__(207);
+	  XMLNode = __webpack_require__(208);
 	
 	  module.exports = XMLText = (function(superClass) {
 	    extend(XMLText, superClass);
@@ -55816,7 +55937,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports) {
 
 	// Generated by CoffeeScript 1.10.0
@@ -55834,7 +55955,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports) {
 
 	// Generated by CoffeeScript 1.10.0
@@ -55874,13 +55995,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports) {
 
 	module.exports = require("timers");
 
 /***/ },
-/* 320 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55891,7 +56012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _xml2js = __webpack_require__(174);
+	var _xml2js = __webpack_require__(175);
 	
 	var _xml2js2 = _interopRequireDefault(_xml2js);
 	
@@ -55900,25 +56021,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var initialConfig = {
+	  debug: true,
 	  siteID: '',
 	  password: '',
 	  language: 'en',
 	  currency: 'USD'
 	};
 	
+	// @TODO add echo token support
 	/**
 	 * This is base class for all requests.
 	 * It will provide basic structure for returning Hostels XML Request based on JSON data
-	 * @class BaseRequest
+	 * @class RequestParser
 	 */
 	
-	var BaseRequest = function () {
+	var RequestParser = function () {
 	
 	  /**
 	   * object constructor
 	   */
-	  function BaseRequest(config, data) {
-	    _classCallCheck(this, BaseRequest);
+	  function RequestParser(config, data) {
+	    _classCallCheck(this, RequestParser);
 	
 	    this._config = Object.assign({}, initialConfig, config);
 	    this._data = data;
@@ -55930,7 +56053,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 	
 	
-	  _createClass(BaseRequest, [{
+	  _createClass(RequestParser, [{
 	    key: 'getMethodName',
 	    value: function getMethodName() {
 	      return '';
@@ -55946,11 +56069,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getPOS() {
 	      var builder = new _xml2js2.default.Builder({
 	        rootName: 'POS',
-	        headless: true
+	        headless: true,
+	        renderOpts: {
+	          pretty: false
+	        }
 	      });
 	      return builder.buildObject({
 	        Source: {
-	          RequestID: {
+	          RequestorID: {
 	            $: {
 	              ID: this._config.siteID,
 	              MessagePassword: this._config.password
@@ -55981,16 +56107,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getRequest() {
 	      return '';
 	    }
+	
+	    /**
+	     * Get environment setting
+	     * @returns {string}
+	     * @private
+	     */
+	
+	  }, {
+	    key: '_getEnv',
+	    value: function _getEnv() {
+	      return this._config.debug ? 'Test' : 'Production';
+	    }
 	  }]);
 	
-	  return BaseRequest;
+	  return RequestParser;
 	}();
 	
-	exports.default = BaseRequest;
+	exports.default = RequestParser;
 	module.exports = exports['default'];
 
 /***/ },
-/* 321 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56001,7 +56139,101 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _xml2js = __webpack_require__(174);
+	var _RequestParser2 = __webpack_require__(321);
+	
+	var _RequestParser3 = _interopRequireDefault(_RequestParser2);
+	
+	var _CriterionParser = __webpack_require__(323);
+	
+	var _CriterionParser2 = _interopRequireDefault(_CriterionParser);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var initialConfig = {
+	  feature: 'Search'
+	};
+	
+	var HotelAvailRequestParser = function (_RequestParser) {
+	  _inherits(HotelAvailRequestParser, _RequestParser);
+	
+	  /**
+	   * object constructor
+	   */
+	  function HotelAvailRequestParser(config, data) {
+	    _classCallCheck(this, HotelAvailRequestParser);
+	
+	    return _possibleConstructorReturn(this, (HotelAvailRequestParser.__proto__ || Object.getPrototypeOf(HotelAvailRequestParser)).call(this, Object.assign({}, initialConfig, config), data));
+	  }
+	
+	  /**
+	   * Returns request name and version
+	   * @returns {string}
+	   */
+	
+	
+	  _createClass(HotelAvailRequestParser, [{
+	    key: 'getMethodName',
+	    value: function getMethodName() {
+	      return 'OTA_HotelAvailRQ';
+	    }
+	
+	    /**
+	     * Returns search request body
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getSearchRequestBody',
+	    value: function getSearchRequestBody(data) {
+	      var criterionParser = new _CriterionParser2.default();
+	      return '<AvailRequestSegments>\n      <AvailRequestSegment>\n      <HotelSearchCriteria>\n      ' + criterionParser.generateXML(data) + '\n      </HotelSearchCriteria>\n      </AvailRequestSegment>\n      </AvailRequestSegments>';
+	    }
+	
+	    /**
+	     * Makes real xml request used directly by HTTP POST
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequest',
+	    value: function getRequest() {
+	      var _config = this._config;
+	      var language = _config.language;
+	      var currency = _config.currency;
+	
+	      // NOTE adding attributes to root element is not working at the moment.
+	
+	      return '<?xml version="1.0" encoding="UTF-8"?>\n      <OTA_HotelAvailRQ Target="' + this._getEnv() + '"\n      xmlns="http://www.opentravel.org/OTA/2003/05"\n      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n      xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05\n      OTA_HotelAvailRQ.xsd"\n      Version="1.006" RequestedCurrency="' + currency + '" AllowPartialAvail="false"\n      PrimaryLangID="' + language + '">\n      ' + this.getPOS() + '\n      ' + this['get' + this._config.feature + 'RequestBody'](this._data) + '\n      </OTA_HotelAvailRQ>';
+	    }
+	  }]);
+	
+	  return HotelAvailRequestParser;
+	}(_RequestParser3.default);
+	
+	exports.default = HotelAvailRequestParser;
+	module.exports = exports['default'];
+
+/***/ },
+/* 323 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _xml2js = __webpack_require__(175);
 	
 	var _xml2js2 = _interopRequireDefault(_xml2js);
 	
@@ -56010,27 +56242,548 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	/**
+	 * This class has logic for generating criterion xml which is used in many types of requests
+	 * @class CriterionParser
+	 */
+	var CriterionParser = function () {
+	  function CriterionParser() {
+	    _classCallCheck(this, CriterionParser);
+	  }
+	
+	  _createClass(CriterionParser, [{
+	    key: 'generateXML',
+	
+	    /**
+	     * Generate criterion xml which will be used in derived classes
+	     * @param {CriterionParamsType} data
+	     * @returns {string} xml
+	     */
+	    value: function generateXML(data) {
+	      var builderJSON = {
+	        HotelRef: {
+	          $: Object.assign({}, data.SegmentCategoryCode ? { SegmentCategoryCode: data.SegmentCategoryCode } : {}, data.PropertyClassCode ? { PropertyClassCode: data.PropertyClassCode } : {}, data.HotelCode ? { HotelCode: data.HotelCode } : {})
+	        }
+	      };
+	
+	      // form stay date range
+	      if (data.StayDateRange) {
+	        builderJSON.StayDateRange = {
+	          $: Object.assign({}, // this is used not to have undefined property which generates error on xml2js
+	          { Start: data.StayDateRange.Start }, data.StayDateRange.End ? { End: data.StayDateRange.End } : {}, data.StayDateRange.Duration ? { Duration: 'P' + data.StayDateRange.Duration + 'N' } : {})
+	        };
+	      }
+	
+	      // form address data
+	      if (data.Address) {
+	        builderJSON.Address = {
+	          CountryName: {
+	            $: { Code: data.Address.CountryCode },
+	            _: data.Address.CountryName
+	          },
+	          CityName: data.Address.CityName
+	        };
+	
+	        if (data.Address.StateCode || data.Address.StateName) {
+	          builderJSON.Address = _extends({}, builderJSON.Address, {
+	            StateProv: {
+	              $: { StateCode: data.Address.StateCode },
+	              _: data.Address.StateCode
+	            }
+	          });
+	        }
+	      }
+	
+	      // form room candidate
+	      if (data.RoomStayCandidates) {
+	        builderJSON.RoomStayCandidates = {
+	          RoomStayCandidate: data.RoomStayCandidates.map(function (r) {
+	            return {
+	              $: {
+	                RoomTypeCode: r.RoomTypeCode,
+	                Quantity: r.Quantity
+	              }
+	            };
+	          })
+	        };
+	      }
+	
+	      // form orderby data
+	      if (data.OrderBy) {
+	        builderJSON.TPA_Extensions = {
+	          OrderBy: {
+	            $: {
+	              Value: data.OrderBy
+	            }
+	          }
+	        };
+	      }
+	
+	      var builder = new _xml2js2.default.Builder({ headless: true, renderOpts: { pretty: false } });
+	      return builder.buildObject({
+	        Criterion: builderJSON
+	      });
+	    }
+	  }]);
+	
+	  return CriterionParser;
+	}();
+	
+	exports.default = CriterionParser;
+	module.exports = exports['default'];
+
+/***/ },
+/* 324 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _xml2js = __webpack_require__(175);
+	
+	var _xml2js2 = _interopRequireDefault(_xml2js);
+	
+	var _RequestParser2 = __webpack_require__(321);
+	
+	var _RequestParser3 = _interopRequireDefault(_RequestParser2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var DoReservationRequestParser = function (_RequestParser) {
+	  _inherits(DoReservationRequestParser, _RequestParser);
+	
+	  function DoReservationRequestParser() {
+	    _classCallCheck(this, DoReservationRequestParser);
+	
+	    return _possibleConstructorReturn(this, (DoReservationRequestParser.__proto__ || Object.getPrototypeOf(DoReservationRequestParser)).apply(this, arguments));
+	  }
+	
+	  _createClass(DoReservationRequestParser, [{
+	    key: 'getMethodName',
+	
+	
+	    /**
+	     * Returns request name and version
+	     * @returns {string}
+	     */
+	    value: function getMethodName() {
+	      return 'OTA_HotelResRQ';
+	    }
+	
+	    /**
+	     * Contains parsing logic for request data to xml body
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequestBody',
+	    value: function getRequestBody(data) {
+	      var builder = new _xml2js2.default.Builder({ headless: true, renderOpts: { pretty: false } });
+	      return builder.buildObject({
+	        HotelReservations: { HotelReservation: {
+	            RoomStays: { RoomStay: { Guarantee: { GuaranteesAccepted: { GuaranteeAccepted: {
+	                      PaymentCard: {
+	                        $: {
+	                          CardCode: data.CreditCard.CreditCardType,
+	                          CardNumber: data.CreditCard.CreditCardNumber,
+	                          ExpireDate: data.CreditCard.ExpiryDate,
+	                          SeriesCode: data.CreditCard.CVV
+	                        },
+	                        CardHolderName: data.CreditCard.CardHolderName || data.Customer.FirstName + ' ' + data.Customer.LastName
+	                      }
+	                    } } } } },
+	            ResGuests: { ResGuest: {
+	                $: { ArrivalTime: data.Customer.EstimatedArrivalTime },
+	                Profiles: { ProfileInfo: { Profile: { Customer: {
+	                        $: { Gender: data.Customer.Gender },
+	                        PersonName: {
+	                          GivenName: data.Customer.FirstName,
+	                          Surname: data.Customer.LastName
+	                        },
+	                        TelephoneNumber: {
+	                          $: { PhoneNumber: data.Customer.PhoneNumber || '' }
+	                        },
+	                        Email: data.Customer.Email,
+	                        CitizenCountryName: {
+	                          $: { Code: data.Customer.CountryCode }
+	                        }
+	                      } } } },
+	                Comments: {
+	                  Text: data.Comment || ''
+	                }
+	              } },
+	            TPA_Extensions: {
+	              ConfirmData: {
+	                $: Object.assign({}, data.ConfirmData)
+	              }
+	            }
+	          } }
+	      });
+	    }
+	
+	    /**
+	     * Makes real xml request used directly by HTTP POST
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequest',
+	    value: function getRequest() {
+	      var language = this._config.language;
+	
+	
+	      return '<?xml version="1.0" encoding="UTF-8"?>\n      <OTA_HotelResRQ EchoToken="1" Target="' + this._getEnv() + '"\n      Version="1.003"\n      xmlns="http://www.opentravel.org/OTA/2003/05"\n      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n      xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05\n      OTA_HotelResRQ.xsd"  PrimaryLangID="' + language + '">\n      ' + this.getPOS() + '\n      ' + this.getRequestBody(this._data) + '\n      </OTA_HotelResRQ>';
+	    }
+	  }]);
+	
+	  return DoReservationRequestParser;
+	}(_RequestParser3.default);
+	
+	exports.default = DoReservationRequestParser;
+	module.exports = exports['default'];
+
+/***/ },
+/* 325 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _xml2js = __webpack_require__(175);
+	
+	var _xml2js2 = _interopRequireDefault(_xml2js);
+	
+	var _RequestParser2 = __webpack_require__(321);
+	
+	var _RequestParser3 = _interopRequireDefault(_RequestParser2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ReadReservationRequestParser = function (_RequestParser) {
+	  _inherits(ReadReservationRequestParser, _RequestParser);
+	
+	  function ReadReservationRequestParser() {
+	    _classCallCheck(this, ReadReservationRequestParser);
+	
+	    return _possibleConstructorReturn(this, (ReadReservationRequestParser.__proto__ || Object.getPrototypeOf(ReadReservationRequestParser)).apply(this, arguments));
+	  }
+	
+	  _createClass(ReadReservationRequestParser, [{
+	    key: 'getMethodName',
+	
+	
+	    /**
+	     * Returns request name and version
+	     * @returns {string}
+	     */
+	    value: function getMethodName() {
+	      return 'OTA_ReadRQ';
+	    }
+	
+	    /**
+	     * Contains parsing logic for request data to xml body
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequestBody',
+	    value: function getRequestBody(data) {
+	      var builder = new _xml2js2.default.Builder({ headless: true, renderOpts: { pretty: false } });
+	      return builder.buildObject({
+	        ReadRequests: {
+	          ReadRequest: {
+	            UniqueID: {
+	              $: Object.assign({}, data, { Type: '14' }) // 14 means read reservation confirmation
+	            }
+	          }
+	        }
+	      });
+	    }
+	
+	    /**
+	     * Makes real xml request used directly by HTTP POST
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequest',
+	    value: function getRequest() {
+	      var language = this._config.language;
+	
+	
+	      return '<?xml version="1.0" encoding="UTF-8"?>\n      <OTA_ReadRQ EchoToken="1" Target="' + this._getEnv() + '"\n      Version="1.006"\n      xmlns="http://www.opentravel.org/OTA/2003/05"\n      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n      xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05\n      OTA_ReadRQ.xsd"  PrimaryLangID="' + language + '">\n      ' + this.getPOS() + '\n      ' + this.getRequestBody(this._data) + '\n      </OTA_ReadRQ>';
+	    }
+	  }]);
+	
+	  return ReadReservationRequestParser;
+	}(_RequestParser3.default);
+	
+	exports.default = ReadReservationRequestParser;
+	module.exports = exports['default'];
+
+/***/ },
+/* 326 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _xml2js = __webpack_require__(175);
+	
+	var _xml2js2 = _interopRequireDefault(_xml2js);
+	
+	var _RequestParser2 = __webpack_require__(321);
+	
+	var _RequestParser3 = _interopRequireDefault(_RequestParser2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var CancelReservationRequestParser = function (_RequestParser) {
+	  _inherits(CancelReservationRequestParser, _RequestParser);
+	
+	  function CancelReservationRequestParser() {
+	    _classCallCheck(this, CancelReservationRequestParser);
+	
+	    return _possibleConstructorReturn(this, (CancelReservationRequestParser.__proto__ || Object.getPrototypeOf(CancelReservationRequestParser)).apply(this, arguments));
+	  }
+	
+	  _createClass(CancelReservationRequestParser, [{
+	    key: 'getMethodName',
+	
+	
+	    /**
+	     * Returns request name and version
+	     * @returns {string}
+	     */
+	    value: function getMethodName() {
+	      return 'OTA_CancelRQ';
+	    }
+	
+	    /**
+	     * Contains parsing logic for request data to xml body
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequestBody',
+	    value: function getRequestBody(data) {
+	      var builder = new _xml2js2.default.Builder({ headless: true, renderOpts: { pretty: false } });
+	      return builder.buildObject({
+	        UniqueID: {
+	          $: Object.assign({}, data.UniqueID, { Type: '14' }) // 14 means read reservation confirmation
+	        },
+	        Verification: {
+	          TPA_Extensions: {
+	            CancelCode: {
+	              $: { Code: data.CancelCode }
+	            }
+	          }
+	        }
+	      });
+	    }
+	
+	    /**
+	     * Makes real xml request used directly by HTTP POST
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequest',
+	    value: function getRequest() {
+	      var language = this._config.language;
+	
+	
+	      return '<?xml version="1.0" encoding="UTF-8"?>\n      <OTA_CancelRQ EchoToken="1" Target="' + this._getEnv() + '"\n      Version="1.001"\n      xmlns="http://www.opentravel.org/OTA/2003/05"\n      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n      xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05\n      OTA_CancelRQ.xsd"  PrimaryLangID="' + language + '" CancelType="' + (this._data.CancelType || 'Cancel') + '">\n      ' + this.getPOS() + '\n      ' + this.getRequestBody(this._data) + '\n      </OTA_CancelRQ>';
+	    }
+	  }]);
+	
+	  return CancelReservationRequestParser;
+	}(_RequestParser3.default);
+	
+	exports.default = CancelReservationRequestParser;
+	module.exports = exports['default'];
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _RequestParser2 = __webpack_require__(321);
+	
+	var _RequestParser3 = _interopRequireDefault(_RequestParser2);
+	
+	var _CriterionParser = __webpack_require__(323);
+	
+	var _CriterionParser2 = _interopRequireDefault(_CriterionParser);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var initialConfig = {
+	  limit: 100,
+	  availabileOnly: true
+	};
+	
+	var HotelSearchRequestParser = function (_RequestParser) {
+	  _inherits(HotelSearchRequestParser, _RequestParser);
+	
+	  /**
+	   * object constructor
+	   */
+	  function HotelSearchRequestParser(config, data) {
+	    _classCallCheck(this, HotelSearchRequestParser);
+	
+	    return _possibleConstructorReturn(this, (HotelSearchRequestParser.__proto__ || Object.getPrototypeOf(HotelSearchRequestParser)).call(this, Object.assign({}, initialConfig, config), data));
+	  }
+	
+	  /**
+	   * Returns request name and version
+	   * @returns {string}
+	   */
+	
+	
+	  _createClass(HotelSearchRequestParser, [{
+	    key: 'getMethodName',
+	    value: function getMethodName() {
+	      return 'OTA_HotelSearchRQ';
+	    }
+	
+	    /**
+	     * Returns search request body
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequestBody',
+	    value: function getRequestBody(data) {
+	      var criterionParser = new _CriterionParser2.default();
+	      return '<Criteria AvailableOnlyIndicator="' + this._config.availabileOnly + '">\n      ' + criterionParser.generateXML(data) + '\n      </Criteria>';
+	    }
+	
+	    /**
+	     * Makes real xml request used directly by HTTP POST
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getRequest',
+	    value: function getRequest() {
+	      var language = this._config.language;
+	
+	      // NOTE adding attributes to root element is not working at the moment.
+	
+	      return '<?xml version="1.0" encoding="UTF-8"?>\n      <OTA_HotelSearchRQ Target="' + this._getEnv() + '"\n      xmlns="http://www.opentravel.org/OTA/2003/05"\n      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n      xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05\n      OTA_HotelSearchRQ.xsd"\n      Version="1.003" MaxResponses="' + this._config.limit + '"\n      PrimaryLangID="' + language + '">\n      ' + this.getPOS() + '\n      ' + this.getRequestBody(this._data) + '\n      </OTA_HotelSearchRQ>';
+	    }
+	  }]);
+	
+	  return HotelSearchRequestParser;
+	}(_RequestParser3.default);
+	
+	exports.default = HotelSearchRequestParser;
+	module.exports = exports['default'];
+
+/***/ },
+/* 328 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _xml2js = __webpack_require__(175);
+	
+	var _xml2js2 = _interopRequireDefault(_xml2js);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var initialConfig = {
+	  feature: ''
+	};
+	
+	/**
 	 * Parses xml response from hostels club API into JSON
 	 * @class ResponseParser
 	 */
+	
 	var ResponseParser = function () {
-	  function ResponseParser() {
+	
+	  /**
+	   * object constructor
+	   */
+	  function ResponseParser(config) {
 	    _classCallCheck(this, ResponseParser);
+	
+	    this._config = Object.assign({}, initialConfig, config);
 	  }
 	
-	  _createClass(ResponseParser, null, [{
-	    key: 'parseXML',
+	  /**
+	   * Parses xml string into promise of JSON
+	   * @param {string} xmlString
+	   * @returns {Promise<Object>}
+	   * @static
+	   */
 	
-	    /**
-	     * Parses xml string into promise of JSON
-	     * @param {string} xmlString
-	     * @returns {Promise<Object>}
-	     * @static
-	     */
+	
+	  _createClass(ResponseParser, [{
+	    key: 'parseXML',
 	    value: function parseXML(xmlString) {
-	      var parser = new _xml2js2.default.Parser({
-	        explicitRoot: false
-	      });
+	      var _this = this;
+	
+	      var parser = new _xml2js2.default.Parser({});
 	      return new Promise(function (resolve, reject) {
 	        parser.parseString(xmlString, function (err, result) {
 	          if (err) {
@@ -56038,12 +56791,173 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return;
 	          }
 	
-	          // omits root attributes for better read
-	          var returnValue = Object.assign({}, result);
-	          delete returnValue.$;
-	          resolve(returnValue);
+	          var errorObj = _this._parseHighLevelErrors(result);
+	          var method = _this.getMethodName();
+	          if (errorObj) {
+	            reject(errorObj);
+	          } else {
+	            var prettifiedResult = _this._prettifyJSON(result[method]);
+	            var errors = _this._checkDataErrors(prettifiedResult);
+	            if (errors) {
+	              reject(errors);
+	              return;
+	            }
+	
+	            var warnings = _this._checkWarnings(prettifiedResult);
+	            if (warnings) {
+	              reject(warnings);
+	              return;
+	            }
+	
+	            delete prettifiedResult.xmlns;
+	            delete prettifiedResult['xmlns:xsi'];
+	            delete prettifiedResult['xsi:schemaLocation'];
+	
+	            resolve(prettifiedResult);
+	          }
 	        });
 	      });
+	    }
+	
+	    /**
+	     * checks if error occurred on high level and returns error object if any
+	     * high level means before checking real data here (malformed, authentication etc)
+	     * @param {Object} result
+	     * @returns {?ErrorObjectType}
+	     * @private
+	     */
+	
+	  }, {
+	    key: '_parseHighLevelErrors',
+	    value: function _parseHighLevelErrors(result) {
+	      if (result.OTA_ErrorRS) {
+	        var _result$OTA_ErrorRS$$ = result.OTA_ErrorRS.$;
+	        var ErrorCode = _result$OTA_ErrorRS$$.ErrorCode;
+	        var TimeStamp = _result$OTA_ErrorRS$$.TimeStamp;
+	        var ErrorMessage = _result$OTA_ErrorRS$$.ErrorMessage;
+	        var Status = _result$OTA_ErrorRS$$.Status;
+	
+	
+	        return {
+	          ErrorCode: ErrorCode,
+	          TimeStamp: TimeStamp,
+	          ErrorMessage: ErrorMessage,
+	          Status: Status,
+	          ErrorType: '0'
+	        };
+	      }
+	      return false;
+	    }
+	
+	    /**
+	     * checks if any error presents in data. i.e; no HotelCode, insufficient data etc.
+	     * @param {Object} result
+	     * @returns {?ErrorObjectType}
+	     */
+	
+	  }, {
+	    key: '_checkDataErrors',
+	    value: function _checkDataErrors(result) {
+	      if (result.Errors) {
+	        return result.Errors.map(function (error) {
+	          return {
+	            ErrorCode: error.Error.Code,
+	            ErrorType: error.Error.Type,
+	            ErrorMessage: error.Error.value
+	          };
+	        });
+	      }
+	      return false;
+	    }
+	
+	    /**
+	     * checks if any warnings received. It will be treated as error as well because it is not processed.
+	     * @param {Object} result
+	     * @returns {?ErrorObjectType}
+	     */
+	
+	  }, {
+	    key: '_checkWarnings',
+	    value: function _checkWarnings(result) {
+	      if (result.Warnings) {
+	        return result.Warnings.map(function (error) {
+	          return {
+	            ErrorCode: error.Warning.Code,
+	            ErrorType: error.Warning.Type,
+	            ErrorMessage: error.Warning.value
+	          };
+	        });
+	      }
+	      return false;
+	    }
+	
+	    /**
+	     * recursively prettifies the json result from xml parser (manages attributes and text nodes)
+	     * @param {any
+	     * @returns {any}
+	     */
+	
+	  }, {
+	    key: '_prettifyJSON',
+	    value: function _prettifyJSON(data) {
+	      var _this2 = this;
+	
+	      // if it is array, it doesn't have keys. instead it has children
+	      if (data instanceof Array) {
+	        // handles case of only child is being array
+	        if (data.length === 1) {
+	          var _data$ = data[0];
+	          var _ = _data$._;
+	          var _$ = _data$.$;
+	
+	          var _otherKeys = _objectWithoutProperties(_data$, ['_', '$']);
+	
+	          if (!Object.keys(_otherKeys).length) {
+	            return this._prettifyJSON(data[0]);
+	          }
+	        }
+	
+	        return data.map(function (item) {
+	          var prettifiedItem = _this2._prettifyJSON(item);
+	
+	          // if (typeof prettifiedItem === 'object' && !(prettifiedItem instanceof Array)) {
+	          //   const keys = Object.keys(prettifiedItem);
+	          //   if (keys.length === 1) {
+	          //      return prettifiedItem[keys[0]];
+	          //   }
+	          // }
+	          return prettifiedItem;
+	        });
+	      }
+	
+	      if (typeof data === 'string') {
+	        return data;
+	      }
+	
+	      var $ = data.$;
+	
+	      var otherChildNodes = _objectWithoutProperties(data, ['$']);
+	
+	      var otherKeys = Object.keys(otherChildNodes);
+	      var result = _extends({}, $);
+	
+	      for (var i = 0; i < otherKeys.length; i += 1) {
+	        var key = otherKeys[i] === '_' ? 'value' : otherKeys[i];
+	        result[key] = this._prettifyJSON(otherChildNodes[otherKeys[i]]);
+	      }
+	
+	      return result;
+	    }
+	
+	    /**
+	     * returns method name
+	     * @returns {string}
+	     */
+	
+	  }, {
+	    key: 'getMethodName',
+	    value: function getMethodName() {
+	      return 'OTA_' + this._config.feature + 'RS';
 	    }
 	  }]);
 	
