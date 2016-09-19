@@ -3,9 +3,20 @@ import request from 'request';
 
 import logger from './logger';
 import HotelDescriptiveInfoRequestParser from './request-parsers/HotelDescriptiveInfoRequestParser';
-import HotelDescriptiveInfoResponseParser from './response-parsers/HotelDescriptiveInfoResponseParser';
+import HotelAvailRequestParser from './request-parsers/HotelAvailRequestParser';
+import DoReservationRequestParser from './request-parsers/DoReservationRequestParser';
+import ReadReservationRequestParser from './request-parsers/ReadReservationRequestParser';
+import CancelReservationRequestParser from './request-parsers/CancelReservationRequestParser';
+import HotelSearchRequestParser from './request-parsers/HotelSearchRequestParser';
 
+import ResponseParser from './response-parsers/ResponseParser';
+
+import type { CriterionParamsType } from './request-parsers/CriterionParser';
 import type { HotelDescriptiveInfoType } from './request-parsers/HotelDescriptiveInfoRequestParser';
+import type { DoReservationType } from './request-parsers/DoReservationRequestParser';
+import type { UniqueIDType } from './request-parsers/ReadReservationRequestParser';
+import type { CancelReservationType } from './request-parsers/CancelReservationRequestParser';
+import type { HotelSearchRequestParserConfigType } from './request-parsers/HotelSearchRequestParser';
 
 type RequestErrorType = {
   code: string
@@ -109,21 +120,104 @@ export default class HostelsAPI {
 
   /**
    * Retrives hotel descriptive info
+   * @param {string} hotelCode
+   * @return {Promise<any>}
    */
-  getHotelDescriptiveInfo(hotelCode: Array<string> | string): Promise<any> {
-    const params: Array<string> = [];
-    if (typeof hotelCode === 'string') {
-      params.push(hotelCode);
-    } else {
-      params.push(...hotelCode);
-    }
+  getHotelDescriptiveInfo(hotelCode: string): Promise<any> {
+    const params: Array<string> = [hotelCode];
 
     const req = new HotelDescriptiveInfoRequestParser(this.config, params.map(
       (code: string): HotelDescriptiveInfoType => ({ HotelCode: code })
     ));
     return this._call(req.getRequest())
       .then((responseXML: string): Promise<any> => {
-        const resParser = new HotelDescriptiveInfoResponseParser();
+        const resParser = new ResponseParser({ feature: 'HotelDescriptiveInfo' });
+        return resParser.parseXML(responseXML);
+      })
+      .catch((err: ErrorObjectType) => {
+        logger(err);
+      });
+  }
+
+  /**
+   * Returns hotel availability search result
+   * @param {CriterionParamsType} criterion
+   * @returns Promise<any>
+   */
+  getHotelAvailailability(criterion: CriterionParamsType): Promise<any> {
+    const req = new HotelAvailRequestParser({ ...this.config, feature: 'Search' }, criterion);
+    return this._call(req.getRequest())
+      .then((responseXML: string): Promise<any> => {
+        const resParser = new ResponseParser({ feature: 'HotelAvail' });
+        return resParser.parseXML(responseXML);
+      })
+      .catch((err: ErrorObjectType) => {
+        logger(err);
+      });
+  }
+
+  /**
+   * Search hotels with criteria
+   * @param {CriterionParamsType} criterion
+   * @param {HotelSearchRequestParserConfigType} config
+   * @returns Promise<any>
+   */
+  searchHotels(criterion: CriterionParamsType, config: HotelSearchRequestParserConfigType): Promise<any> {
+    const req = new HotelSearchRequestParser(Object.assign({}, this.config, config), criterion);
+    return this._call(req.getRequest())
+      .then((responseXML: string): Promise<any> => {
+        const resParser = new ResponseParser({ feature: 'HotelSearch' });
+        return resParser.parseXML(responseXML);
+      })
+      .catch((err: ErrorObjectType) => {
+        logger(err);
+      });
+  }
+
+  /**
+   * Does hotel reservation with customer and credit card information
+   * @param {DoReservationType} resData
+   * @returns Promise<any>
+   */
+  doReservation(resData: DoReservationType): Promise<any> {
+    const req = new DoReservationRequestParser(this.config, resData);
+    return this._call(req.getRequest())
+      .then((responseXML: string): Promise<any> => {
+        const resParser = new ResponseParser({ feature: 'HotelRes' });
+        return resParser.parseXML(responseXML);
+      })
+      .catch((err: ErrorObjectType) => {
+        logger(err);
+      });
+  }
+
+  /**
+   * Read the reservation which was made already
+   * @param {UniqueIDType} resData
+   * @returns Promise<any>
+   */
+  readReservation(data: UniqueIDType): Promise<any> {
+    const req = new ReadReservationRequestParser(this.config, data);
+    return this._call(req.getRequest())
+      .then((responseXML: string): Promise<any> => {
+        const resParser = new ResponseParser({ feature: 'ResRetrieve' });
+        return resParser.parseXML(responseXML);
+      })
+      .catch((err: ErrorObjectType) => {
+        logger(err);
+      });
+  }
+
+  /**
+   * Cancels the reservation which was made already
+   * @param {CancelReservationType} cancelData
+   * @returns Promise<any>
+   */
+  cancelReservation(cancelData: CancelReservationType): Promise<any> {
+    const req = new CancelReservationRequestParser(this.config, cancelData);
+    return this._call(req.getRequest())
+      .then((responseXML: string): Promise<any> => {
+        const resParser = new ResponseParser({ feature: 'Cancel' });
         return resParser.parseXML(responseXML);
       })
       .catch((err: ErrorObjectType) => {

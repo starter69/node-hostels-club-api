@@ -1,13 +1,8 @@
 var HostelsAPI = require('../dist/HostelsAPI');
-var api = new HostelsAPI({
-  siteID: '2345',
-  password: 'HOpert123@',
-  debug: true
-});
+var config = require('./config');
+var api = new HostelsAPI(config);
 
-// debugging
-// process.env.DEBUG = 'hostels*';
-
+// reference 11.3.1 in api book
 api.getHotelDescriptiveInfo('9272')
 .then(function(result) {
   console.log(result);

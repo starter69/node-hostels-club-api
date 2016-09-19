@@ -15,10 +15,11 @@
     "comma-dangle": 0,
     "no-underscore-dangle": 0,
     "no-console": 0,
-    "max-len": [2, 1000, 4],
+    "max-len": [2, 160, 4],
     "no-duplicate-imports": 0,
     "class-methods-use-this": 0,
     "arrow-parens": 0,
+    "object-curly-spacing": 0,
     "flowtype/require-parameter-type": 1,
     "flowtype/require-return-type": [
       1,
