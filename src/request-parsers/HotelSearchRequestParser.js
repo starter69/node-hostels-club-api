@@ -7,12 +7,12 @@ import type { CriterionParamsType } from './CriterionParser';
 
 export type HotelSearchRequestParserConfigType = RequestParserConfigType & {
   limit: number,
-  availabileOnly: bool
+  availableOnly: bool
 };
 
 const initialConfig = {
   limit: 100,
-  availabileOnly: true
+  availableOnly: true
 };
 
 export default class HotelSearchRequestParser extends RequestParser {
@@ -40,7 +40,7 @@ export default class HotelSearchRequestParser extends RequestParser {
    */
   getRequestBody(data: CriterionParamsType): string {
     const criterionParser: CriterionParser = new CriterionParser();
-    return `<Criteria AvailableOnlyIndicator="${this._config.availabileOnly}">
+    return `<Criteria AvailableOnlyIndicator="${this._config.availableOnly}">
       ${criterionParser.generateXML(data)}
       </Criteria>`;
   }

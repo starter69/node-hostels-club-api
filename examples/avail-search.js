@@ -16,7 +16,7 @@ api.getHotelAvailailability({
   },
   SegmentCategoryCode: '2',
   PropertyClassCode: '20',
-  OrderBy: 'rating'
+  OrderBy: 'rating' // 'rating' or 'price'
 })
 .then(function(result) {
   console.log(result);

@@ -14,7 +14,7 @@ api.searchHotels({
   OrderBy: 'rating'
 }, {
   limit: 2,
-  availabileOnly: true
+  availableOnly: true // @TODO fix typo
 })
 .then(function(result) {
   console.log(result);
