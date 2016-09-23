@@ -2,7 +2,7 @@
   "name": "node-hostels-club-api",
   "version": "0.0.1",
   "description": "NodeJS wrapper for hostels club XML API service",
-  "main": "dist/HostelsAPI.js",
+  "main": "dist/HostelsAPI.min.js",
   "scripts": {
     "build": "webpack --mode=build",
     "dev": "webpack --progress --colors --watch --mode=dev",
