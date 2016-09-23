@@ -11,7 +11,7 @@ NodeJs wrapper for hostels club xml API service
 - Run `DEBUG=hostels* node --filename--`
 
 *Note*
-> Set `debug` as true in config to use the API without whitelisting your API at the moment.
+> Set `debug` as true in config to use the API without whitelisting your IP at the moment.
 
 ## Folder structure
 
