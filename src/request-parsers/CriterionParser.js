@@ -28,7 +28,7 @@ export type CriterionParamsType = {
   PropertyClassCode?: string,
   HotelCode?: string,
   RoomStayCandidates?: Array<RoomStayCandidateType>,
-  OrderBy: 'rating' | 'price';
+  OrderBy: 'rating' | 'price'
 };
 
 /**
